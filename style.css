@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka&display=swap');
+
+:root {
+    --primary-color: #3e67d6; /* Example primary color */
+    --text-color: #333; /* Example text color */
+    --background-color: #f4f4f4; /* Example background color */
+}
+
+.base * {
+    font-family: 'Fredoka', sans-serif;
+    gap: .75rem;
+}
+
+.button {
+    background-color: var(--primary-color);
+    padding: .5rem .75rem;
+    color: white;
+    border-radius: .5rem;
+}
