@@ -5,14 +5,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <script defer src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="style.css">
 </head>
+<style>
+  #app { display: none; }
+</style>
+<body id="app" class="base">
 
-<body class="base">
 
+  <header class="flex items-center p-4">
+    <h1>Add your products</h1>
 
-  <header class="flex items-center p-4 text-white">
     <div class="flex-1"></div>
     <!-- button export csrv button -->
     <button class="button" onclick="exportToCSV()">Export CSV</button>
@@ -45,7 +47,7 @@
     </template>
 
     <div>
-      <button id="add-item" class="flex gap-1 items-center button">
+      <button id="add-item" class="flex gap-[.25rem] pl-[.7rem] items-center button">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
           class="size-5 stroke-2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -54,9 +56,12 @@
       </button>
     </div>
     <hr class="mx-1">
-    <span>
-      Sum of calories: <span id="suma">0</span>
-    </span>
+    <div class="flex justify-between">
+      <span>
+        Sum of calories: <span id="suma">0</span>
+      </span>
+      <button class="button">Continue -></button>
+    </div>
   </main>
 
   <!-- <div includeHTML="file.html">a</div> -->
@@ -66,16 +71,25 @@
     Updated!
   </div>
 
-
+  <script src="tailwind.js"></script>
+  <script>
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "style.css";
+    link.onload = () => {
+      document.getElementById("app").style.display = "block";
+    };
+    document.head.appendChild(link);
+  </script>
   <script>
     const setLocalProducts = (products) => localStorage.setItem("products", JSON.stringify(products));
-    // setLocalProducts([
-    //   { title: "Apple", kcal: 52 },
-    //   { title: "Banana", kcal: 89 },
-    //   { title: "Orange", kcal: 47 },
-    //   { title: "Strawberry", kcal: 32 },
-    //   { title: "Grapes", kcal: 69 }
-    // ]);
+    setLocalProducts([
+      { title: "Apple", kcal: 52 },
+      { title: "Banana", kcal: 89 },
+      { title: "Orange", kcal: 47 },
+      { title: "Strawberry", kcal: 32 },
+      { title: "Grapes", kcal: 69 }
+    ]);
     const getLocalProducts = () => JSON.parse(localStorage.getItem("products") || "[]");
     function mergeArrays(arr1, arr2) {
       const map = new Map();
