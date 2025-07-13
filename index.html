@@ -17,18 +17,29 @@
 
     <div class="flex-1"></div>
     <!-- button export csrv button -->
-    <button class="button" onclick="exportToCSV()">Export CSV</button>
+    <button class="button" onclick="exportToCSV()">Export products dataset</button>
 
     <!-- button import button -->
     <div>
-      <button class="button" id="importBtn">Import CSV</button>
+      <button class="button" id="importBtn">Import products dataset</button>
       <input type="file" id="productsImport" accept=".csv" style="display: none">
     </div>
+
+    <button class="button" onclick="loadExampleProducts()">Load example products</button>
   </header>
 
-  <main class="flex flex-col p-4 gap-4">
-    <div id="items-container"></div>
-
+  <main class="flex flex-col p-4 m-4 bg-gray-50 rounded-lg">
+    <div class="rounded-lg grid grid-cols-[1fr_1fr_1fr_1fr_auto] gap-2 mb-2">
+      <b class="text-gray-700">Title</b>
+      <b class="text-gray-700">Calories (kcal/100g)</b>
+      <div class="flex items-center gap-2">
+        <span class="text-gray-300">|</span>
+        <b class="text-gray-700">Weight (g)</b>
+      </div>
+      <b class="text-gray-700">Result (kcal)</b>
+      <button class="invisible px-1">✕</button>
+    </div>  
+    <div id="items-container" class="-mt-2"></div>
     <template id="item-template">
       <div class="rounded-lg grid grid-cols-[1fr_1fr_1fr_1fr_auto] gap-2 mb-2">
         <input type="text" class="weight w-full px-3 py-2 border rounded-md" placeholder="Title">
@@ -37,12 +48,13 @@
 
         </ul>
         <input type="number" class="kcal w-full px-3 py-2 border rounded-md" placeholder="kcal/100g">
+        
         <div class="flex items-center gap-2">
           <span class="text-gray-300">|</span>
           <input type="number" class="weight w-full px-3 py-2 border rounded-md" placeholder="Weight (g)">
         </div>
         <span class="calculated-kcal flex justify-center items-center">0 kcal</span>
-        <button id="remove" class="remove text-red-500">✕</button>
+        <button id="remove" class="remove text-red-500 px-1">✕</button>
       </div>
     </template>
 
@@ -55,12 +67,12 @@
         Add product
       </button>
     </div>
-    <hr class="mx-1">
-    <div class="flex justify-between">
-      <span>
-        Sum of calories: <span id="suma">0</span>
-      </span>
-      <button class="button">Continue -></button>
+    <hr class="mt-4">
+    <div class="flex justify-between items-center p-2">
+      <h2>
+        Sum of calories: <b id="suma">0</b>
+      </h2>
+      <button id="continue" onclick="continueToList()" class="button">Continue -></button>
     </div>
   </main>
 
@@ -70,7 +82,35 @@
     class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded shadow-lg opacity-0 transition-opacity duration-300 pointer-events-none">
     Updated!
   </div>
+  <script>
+    const app = document.getElementById('app');
 
+    const setListContent = () => {
+      fetch('list.html')
+        .then(res => res.text())
+        .then(html => {
+          app.innerHTML = html;
+        });
+    }
+
+    if (document.cookie.includes('list_cookie')) {
+      setListContent();
+    }
+
+    function createListCookie(obj) {
+      const value = encodeURIComponent(JSON.stringify(obj));
+      document.cookie = `list_cookie=${value}; path=/; max-age=86400`; // expires in 1 day
+    }
+
+    function readListCookie() {
+      const match = document.cookie.match(/(?:^|; )list_cookie=([^;]*)/);
+      return match ? JSON.parse(decodeURIComponent(match[1])) : null;
+    }
+    
+    function printListCookie(){
+        console.log(JSON.stringify( readListCookie()));
+    }
+  </script>
   <script src="tailwind.js"></script>
   <script>
     const link = document.createElement("link");
@@ -81,15 +121,19 @@
     };
     document.head.appendChild(link);
   </script>
+
   <script>
     const setLocalProducts = (products) => localStorage.setItem("products", JSON.stringify(products));
-    setLocalProducts([
-      { title: "Apple", kcal: 52 },
-      { title: "Banana", kcal: 89 },
-      { title: "Orange", kcal: 47 },
-      { title: "Strawberry", kcal: 32 },
-      { title: "Grapes", kcal: 69 }
-    ]);
+
+    function loadExampleProducts() {
+      setLocalProducts([
+        { title: "Apple", kcal: 52 },
+        { title: "Banana", kcal: 89 },
+        { title: "Orange", kcal: 47 },
+        { title: "Strawberry", kcal: 32 },
+        { title: "Grapes", kcal: 69 }
+      ]);
+    }
     const getLocalProducts = () => JSON.parse(localStorage.getItem("products") || "[]");
     function mergeArrays(arr1, arr2) {
       const map = new Map();
@@ -104,9 +148,15 @@
     const template = document.getElementById('item-template');
     const addBtn = document.getElementById('add-item');
 
+
     const items = [];
 
 
+
+    function continueToList() {
+      createListCookie(JSON.parse(sessionStorage.getItem('items') || '[]'));
+      setListContent();
+    }
 
     function loadItems() {
       const savedItems = JSON.parse(sessionStorage.getItem('items') || '[]');
@@ -156,10 +206,21 @@
             return;
           b = true;
           const li = document.createElement('li');
+
           li.innerHTML = `
             <span>${product.title}</span>
             <span class="text-gray-400">${product.kcal} (kcal/100g)</span>
           `;
+
+          const rmBtn = document.createElement('button');
+          rmBtn.textContent = '✕';
+          rmBtn.classList.add("list-rm-btn");
+          rmBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            li.remove();
+            setLocalProducts(getLocalProducts().filter(x => x.title !== product.title));
+          });
+          li.appendChild(rmBtn);
 
           li.className = 'py-2 px-4 hover:bg-gray-100 cursor-pointer flex justify-between gap-12';
           li.addEventListener('click', () => {
