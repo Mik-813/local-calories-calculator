@@ -28,7 +28,6 @@
       <input type="file" id="productsImport" accept=".csv" style="display: none">
     </div>
 
-    <button class="button" onclick="loadExampleProducts()">Load example products</button>
   </header>
 
   <main class="flex flex-col p-4 m-4 bg-gray-50 rounded-lg">
@@ -107,7 +106,7 @@
           });
         });
     }
-    
+
     if (localStorage.getItem('list_cookie')) {
       setListContent();
     }
@@ -139,16 +138,24 @@
 
   <script>
     const setLocalProducts = (products) => localStorage.setItem("products", JSON.stringify(products));
-
-    function loadExampleProducts() {
+    if (!localStorage.getItem('list_cookie')) {
       setLocalProducts([
         { title: "Apple", kcal: 52 },
         { title: "Banana", kcal: 89 },
         { title: "Orange", kcal: 47 },
         { title: "Strawberry", kcal: 32 },
-        { title: "Grapes", kcal: 69 }
+        { title: "Egg", kcal: 143 },
+        { title: "Cereal", kcal: 379 },
+        { title: "Chicken", kcal: 165 },
+        { title: "Rice", kcal: 130 },
+        { title: "Bread", kcal: 265 },
+        { title: "Milk", kcal: 42 },
+        { title: "Cheese", kcal: 402 },
+        { title: "Butter", kcal: 717 },
+        { title: "Potato", kcal: 77 },
       ]);
     }
+
     const getLocalProducts = () => JSON.parse(localStorage.getItem("products") || "[]");
     function mergeArrays(arr1, arr2) {
       const map = new Map();
