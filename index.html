@@ -7,8 +7,11 @@
   <title>Document</title>
 </head>
 <style>
-  #app { display: none; }
+  #app {
+    display: none;
+  }
 </style>
+
 <body id="app" class="base">
 
 
@@ -38,7 +41,7 @@
       </div>
       <b class="text-gray-700">Result (kcal)</b>
       <button class="invisible px-1">✕</button>
-    </div>  
+    </div>
     <div id="items-container" class="-mt-2"></div>
     <template id="item-template">
       <div class="rounded-lg grid grid-cols-[1fr_1fr_1fr_1fr_auto] gap-2 mb-2">
@@ -48,7 +51,7 @@
 
         </ul>
         <input type="number" class="kcal w-full px-3 py-2 border rounded-md" placeholder="kcal/100g">
-        
+
         <div class="flex items-center gap-2">
           <span class="text-gray-300">|</span>
           <input type="number" class="weight w-full px-3 py-2 border rounded-md" placeholder="Weight (g)">
@@ -59,7 +62,7 @@
     </template>
 
     <div>
-      <button id="add-item" class="flex gap-[.25rem] pl-[.7rem] items-center button">
+      <button onclick="addItem()" class="flex gap-[.25rem] pl-[.7rem] items-center button">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
           class="size-5 stroke-2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -89,26 +92,38 @@
       fetch('list.html')
         .then(res => res.text())
         .then(html => {
+          const temp = document.createElement('div');
+          temp.innerHTML = html;
           app.innerHTML = html;
+
+          temp.querySelectorAll('script').forEach(oldScript => {
+            const newScript = document.createElement('script');
+            if (oldScript.src) {
+              newScript.src = oldScript.src;
+            } else {
+              newScript.textContent = oldScript.textContent;
+            }
+            document.body.appendChild(newScript);
+          });
         });
     }
-
-    if (document.cookie.includes('list_cookie')) {
+    
+    if (localStorage.getItem('list_cookie')) {
       setListContent();
     }
 
+
     function createListCookie(obj) {
-      const value = encodeURIComponent(JSON.stringify(obj));
-      document.cookie = `list_cookie=${value}; path=/; max-age=86400`; // expires in 1 day
+      localStorage.setItem('list_cookie', JSON.stringify(obj));
     }
 
     function readListCookie() {
-      const match = document.cookie.match(/(?:^|; )list_cookie=([^;]*)/);
-      return match ? JSON.parse(decodeURIComponent(match[1])) : null;
+      const value = localStorage.getItem('list_cookie');
+      return value ? JSON.parse(value) : null;
     }
-    
-    function printListCookie(){
-        console.log(JSON.stringify( readListCookie()));
+
+    function printListCookie() {
+      console.log(JSON.stringify(readListCookie()));
     }
   </script>
   <script src="tailwind.js"></script>
@@ -144,9 +159,9 @@
     }
 
 
-    const container = document.getElementById('items-container');
+    const itemsContainer = document.getElementById('items-container');
     const template = document.getElementById('item-template');
-    const addBtn = document.getElementById('add-item');
+
 
 
     const items = [];
@@ -154,7 +169,11 @@
 
 
     function continueToList() {
-      createListCookie(JSON.parse(sessionStorage.getItem('items') || '[]'));
+      const items = JSON.parse(sessionStorage.getItem('items') || '[]')
+      createListCookie(items.map(item => {
+        item.currentCalories = 0;
+        return item;
+      }));
       setListContent();
     }
 
@@ -267,16 +286,15 @@
 
       removeBtn.addEventListener('click', () => {
         items.splice(index, 1);
-        container.removeChild(wrapper);
+        itemsContainer.removeChild(wrapper);
         saveItems();
       });
 
       const wrapper = document.createElement('div');
       wrapper.appendChild(clone);
-      container.appendChild(wrapper);
+      itemsContainer.appendChild(wrapper);
     }
 
-    addBtn.addEventListener('click', () => addItem());
 
 
 
