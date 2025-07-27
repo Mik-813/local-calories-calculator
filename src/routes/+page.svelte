@@ -18,10 +18,10 @@
 <div
   class="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50"
 >
-  <Header {items} />
+  <Header items={items} />
 
   <button
-    class="fixed flex gap-1 right-0 bottom-0 m-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white p-4 rounded-xl font-bold"
+    class="fixed flex gap-1 right-0 bottom-0 m-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white p-4 rounded-xl font-bold z-50"
     onclick={addItem}><Plus /> Add item</button
   >
 

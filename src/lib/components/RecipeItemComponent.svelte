@@ -1,7 +1,7 @@
 <script lang="ts">
   import { useBooleanState } from "$lib/boolean-object.svelte";
   import Chevron from "$lib/icons/Chevron.svelte";
-  import { debounce } from "$lib/utils";
+  import { createDebouncer } from "$lib/utils";
   import { fade } from "svelte/transition";
   import CustomInput from "./CustomInput.svelte";
   import autoAnimate from "@formkit/auto-animate";
@@ -17,10 +17,11 @@
   function toggleWrapping() {
     isWrapped = !isWrapped;
   }
+  const debounceShowTooltip = createDebouncer(showTooltip.setFalse, 200);
 
   function onThumbMove() {
     showTooltip.setTrue();
-    debounce(showTooltip.setFalse, 200);
+    debounceShowTooltip();
   }
 </script>
 

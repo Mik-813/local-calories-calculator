@@ -1,4 +1,4 @@
-export function throttle(callback: () => void, milliseconds = 1000) {
+export function createThrottler(callback: () => void, milliseconds = 1000) {
     let prev = 0;
 
     return () => {
@@ -11,7 +11,7 @@ export function throttle(callback: () => void, milliseconds = 1000) {
     }
 }
 
-export function debounce(callback: () => void, delay = 1000) {
+export function createDebouncer(callback: () => void, delay = 1000) {
     let timeoutId: number | undefined;
 
     return () => {
