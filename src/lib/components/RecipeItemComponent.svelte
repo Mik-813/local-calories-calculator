@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import Slider from "$lib/components/Slider.svelte";
   import Chevron from "$lib/icons/Chevron.svelte";
   import CustomInput from "$lib/components/CustomInput.svelte";
@@ -10,13 +11,23 @@
   }: { item: RecipeItem; removeItem: (items: RecipeItem) => void } = $props();
 
   let isWrapped = $state(false);
+  let containerRef: HTMLDivElement;
 
   function toggleWrapping() {
     isWrapped = !isWrapped;
   }
+
+  onMount(() => {
+    if (containerRef) {
+      containerRef.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'center' 
+      });
+    }
+  });
 </script>
 
-<div class="relative bg-white rounded-lg p-4 mb-4">
+<div bind:this={containerRef} class="relative bg-white rounded-lg p-4 mb-4">
   <div class="flex items-center justify-between">
     <button onclick={() => toggleWrapping()} class="text-gray-500 px-1">
       <div style="rotate: {isWrapped ? 90 : 0}deg; transition: rotate 0.2s;">
