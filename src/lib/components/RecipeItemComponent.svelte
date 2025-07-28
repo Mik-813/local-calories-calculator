@@ -4,13 +4,27 @@
   import Chevron from "$lib/icons/Chevron.svelte";
   import CustomInput from "$lib/components/CustomInput.svelte";
   import autoAnimate from "@formkit/auto-animate";
+  import Dropdown from "$lib/components/ProductsDropdown.svelte";
+  import { storage } from "$lib/storageInterface";
+
+  let products = $state(storage.products.get());
+
+  function removeProduct(product: Product) {
+    products = products.filter((p) => p.title !== product.title);
+    storage.products.set(products);
+  }
 
   const {
     item = $bindable(),
     removeItem,
   }: { item: RecipeItem; removeItem: (items: RecipeItem) => void } = $props();
 
+  function insertProductData(product: Product): void {
+    item.product = product;
+  }
+
   let isWrapped = $state(false);
+  let isVisibleDropdown = $state(false);
   let containerRef: HTMLDivElement;
 
   function toggleWrapping() {
@@ -19,9 +33,9 @@
 
   onMount(() => {
     if (containerRef) {
-      containerRef.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'center' 
+      containerRef.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
       });
     }
   });
@@ -49,7 +63,17 @@
   <ul use:autoAnimate>
     {#if !isWrapped}
       <div class="pt-4"></div>
-      <CustomInput bind:value={item.product.title} label="Title" />
+      <CustomInput
+        bind:value={item.product.title}
+        onfocus={() => (isVisibleDropdown = true)}
+        label="Title"
+      />
+      <Dropdown
+        {products}
+        bind:visible={isVisibleDropdown}
+        onRemove={removeProduct}
+        onClick={insertProductData}
+      />
 
       <CustomInput
         bind:value={item.product.kcal_100g}
@@ -72,7 +96,8 @@
       />
 
       {#if item.product?.weight}
-        <Slider currentValue={item.consumption_g} maxValue={item.product.weight}></Slider>
+        <Slider currentValue={item.consumption_g} maxValue={item.product.weight}
+        ></Slider>
       {/if}
     {/if}
   </ul>

@@ -1,10 +1,12 @@
 <script lang="ts">
     let {
         value = $bindable(),
+        onfocus: onFocus,
         label,
         type = "text",
     }: {
         label: string;
+        onfocus?: () => void;
         value?: string | number;
         type?: string;
     } = $props();
@@ -28,7 +30,10 @@
         id="inputField"
         bind:value
         {type}
-        onfocus={() => (isFocused = true)}
+        onfocus={() => {
+            isFocused = true;
+            onFocus?.();
+        }}
         onblur={() => (isFocused = false)}
         class="w-full border border-gray-200 bg-white focus:ring-2 focus:ring-purple-400 focus:border-transparent rounded px-3 py-3 transition-all duration-200 outline-none text-sm"
     />
