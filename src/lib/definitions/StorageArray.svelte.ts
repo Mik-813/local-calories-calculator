@@ -26,7 +26,7 @@ export class StorageItem<T extends object> {
 }
 
 export class StorageArray<T> {
-    readonly data: T[];
+    private data: T[];
     readonly key: string;
     readonly storage: Storage;
     private callbacks = new SvelteSet<(data: T[]) => void>();
@@ -43,7 +43,7 @@ export class StorageArray<T> {
     };
 
     set(value: T[]) {
-        this.data.splice(0, this.data.length, ...value);
+        this.data = value
         this.storage.setItem(this.key, JSON.stringify(this.data));
         this.callbacks.forEach(callback => callback(value));
     };

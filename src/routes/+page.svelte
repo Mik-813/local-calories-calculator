@@ -45,7 +45,7 @@
         );
       }),
     );
-    storage.hotProducts.set([]);
+    hotProducts = [];
   }
 
   $effect(() => storage.hotProducts.set(hotProducts));
