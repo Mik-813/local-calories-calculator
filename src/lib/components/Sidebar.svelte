@@ -1,17 +1,21 @@
 <script lang="ts">
+  import type { Component } from "svelte";
   import { fade } from "svelte/transition";
-  let { sidebarOpen = $bindable() } = $props();
+
+  interface SidebarItem {
+    title: string;
+    description: string;
+    className: string;
+    Icon: Component;
+    onClick: () => void;
+  }
+  let {
+    sidebarOpen = $bindable(),
+    items = [],
+  }: { sidebarOpen: boolean; items: SidebarItem[] } = $props();
 
   const closeSidebar = () => {
     sidebarOpen = false;
-  };
-
-  const handleImport = () => {
-    console.log("Import clicked");
-  };
-
-  const handleExport = () => {
-    console.log("Export clicked");
   };
 
   const handleKeydown = (e: KeyboardEvent) => {
@@ -62,63 +66,28 @@
 
     <!-- Sidebar Buttons -->
     <div class="space-y-4">
-      <button
-        onclick={handleImport}
-        class="w-full bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-left transition-all duration-200 hover:scale-105 active:scale-95"
-      >
-        <div class="flex items-center space-x-3">
-          <div
-            class="w-10 h-10 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl flex items-center justify-center"
-          >
-            <svg
-              class="w-5 h-5 text-white"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+      {#each items as item}
+        <button
+          onclick={item.onClick}
+          class="w-full bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-xl p-4 text-left transition-all duration-200 hover:scale-105 active:scale-95"
+        >
+          <div class="flex items-center space-x-3">
+            <div
+              class="w-10 h-10 {item.className} rounded-lg flex items-center justify-center overflow-hidden"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"
-              />
-            </svg>
+              <div
+                class="bg-gradient-to-br from-white/40 to-white/10 w-full h-full p-2"
+              >
+                <item.Icon />
+              </div>
+            </div>
+            <div class="flex-1">
+              <div class="font-semibold">{item.title}</div>
+              <div class="text-sm text-white/70">{item.description}</div>
+            </div>
           </div>
-          <div>
-            <div class="font-semibold">Import</div>
-            <div class="text-sm text-white/70">Import food data</div>
-          </div>
-        </div>
-      </button>
-
-      <button
-        onclick={handleExport}
-        class="w-full bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-2xl p-4 text-left transition-all duration-200 hover:scale-105 active:scale-95"
-      >
-        <div class="flex items-center space-x-3">
-          <div
-            class="w-10 h-10 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-xl flex items-center justify-center"
-          >
-            <svg
-              class="w-5 h-5 text-white"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-              />
-            </svg>
-          </div>
-          <div>
-            <div class="font-semibold">Export</div>
-            <div class="text-sm text-white/70">Export your data</div>
-          </div>
-        </div>
-      </button>
+        </button>
+      {/each}
     </div>
   </div>
 </div>

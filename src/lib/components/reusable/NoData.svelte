@@ -1,5 +1,3 @@
-
-{#if !products?.length}
 <div class="text-center py-12">
   <div
     class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-purple-400 to-indigo-400 rounded-full flex items-center justify-center"
@@ -25,15 +23,3 @@
     Add some food items to start tracking your calories
   </p>
 </div>
-{:else}
-<div class="space-y-4">
-  {#each products as product}
-    <div
-      class="bg-gradient-to-r from-purple-100 to-indigo-100 rounded-2xl p-4 border border-purple-200"
-    >
-      <h3 class="font-semibold text-gray-800">{product.name}</h3>
-      <p class="text-gray-600">{product.calories} kcal</p>
-    </div>
-  {/each}
-</div>
-{/if}

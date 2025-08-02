@@ -1,5 +1,5 @@
 <script lang="ts">
-  const { currentValue, maxValue } = $props();
+  const { currentValue, maxValue, title, unit, extra="of daily goal" } = $props();
   const progressPercentage = $derived((currentValue / maxValue) * 100);
 </script>
 
@@ -9,10 +9,10 @@
       class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
     >
       <div class="text-sm sm:text-base font-medium">
-        Calories: {currentValue}/{maxValue} kcal
+        {title} {currentValue}/{maxValue} {unit}
       </div>
       <div class="text-sm sm:text-base font-medium">
-        Left: {maxValue - currentValue} kcal
+        Left: {maxValue - currentValue} {unit}
       </div>
     </div>
 
@@ -24,7 +24,7 @@
         ></div>
       </div>
       <div class="mt-2 text-xs sm:text-sm text-white/80 text-center">
-        {progressPercentage.toFixed(1)}% of daily goal
+        {progressPercentage.toFixed(1)}% {extra}
       </div>
     </div>
   </div>

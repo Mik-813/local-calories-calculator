@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createDebouncer } from "$lib/utils";
+  import { createDebouncer } from "$lib/utlis/timers";
   import { fade } from "svelte/transition";
 
   let {
@@ -15,6 +15,12 @@
     showTooltip = true;
     debounceShowTooltip();
   }
+
+  $effect(() => {
+    if (currentValue > maxValue) {
+      currentValue = maxValue;
+    }
+  });
 </script>
 
 <div class="px-1 py-1 relative">
@@ -36,7 +42,7 @@
       </div>
     </div>
   {/if}
-
+    
   <div class="relative">
     <input
       id="budget"
@@ -60,8 +66,8 @@
 <style>
   .slider::-webkit-slider-thumb {
     appearance: none;
-    height: 1.2rem;
-    width: 1.2rem;
+    height: 1rem;
+    width: 1rem;
     border-radius: 50%;
     background: linear-gradient(135deg, #8b5cf6, #6366f1);
     cursor: pointer;
@@ -75,8 +81,8 @@
   }
 
   .slider::-moz-range-thumb {
-    height: 1.2rem;
-    width: 1.2rem;
+    height: 1rem;
+    width: 1rem;
     border-radius: 50%;
     background: linear-gradient(135deg, #8b5cf6, #6366f1);
     cursor: pointer;

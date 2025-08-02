@@ -10,8 +10,7 @@ declare global {
 		kcal_100g?: number;
 	}
 
-	interface RecipeItem {
-		product: Product;
+	interface Product extends Product {
 		consumption_g: number;
 	}
 
@@ -19,6 +18,11 @@ declare global {
 		items?: RecipeItem[];
 		date?: string;
 	}
+
+  interface Settings {
+    currency_sign?: string;
+    language: "en" | "pl" | "ua";
+  }
 }
 
 export { };
