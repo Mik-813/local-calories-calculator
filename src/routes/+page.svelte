@@ -111,15 +111,9 @@
   </main>
 
   <div class="fixed right-0 bottom-0 m-4">
-    <div class="flex flex-col gap-2">
-      <button
-        class="flex gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white p-4 rounded-lg font-bold items-center"
-        onclick={addItem}><Plus /> Add item</button
-      >
-      <button
-        class="flex gap-2 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white p-4 rounded-lg font-bold items-center"
-        onclick={newList}><ArrowPath /> New list</button
-      >
-    </div>
+    <button
+      class="flex gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white p-4 rounded-lg font-bold items-center"
+      onclick={newList}><ArrowPath /> New list</button
+    >
   </div>
 </div>
