@@ -4,7 +4,19 @@
   import { clickOutside } from "$lib/actions/clickOutside";
   import type { Snippet } from "svelte";
 
-  const { items, empty }: { items: ListItem<T>[]; empty: Snippet<[()=>void]> } = $props();
+  const {
+    items,
+    empty,
+    onclick: onClick,
+    onremove: onRemove,
+    placeholder,
+  }: {
+    items: ListItem<T>[];
+    empty: Snippet<[() => void]>;
+    onclick?: (items: ListItem<T>) => void;
+    onremove?: (items: ListItem<T>) => void;
+    placeholder?: string;
+  } = $props();
   let itemsState = $state(items);
   let isDropdownVisible = $state(false);
   let value = $state("");
@@ -30,9 +42,15 @@
   <input
     bind:value
     onclick={() => (isDropdownVisible = true)}
-    placeholder="Search..."
+    {placeholder}
     class="w-full border-none rounded-md text-sm text-gray-500 focus:ring-purple-600 outline-none transition-all ring-0 focus:ring-2 py-3 px-4"
     type="text"
   />
-  <Dropdown bind:visible={isDropdownVisible} items={itemsState} {empty} />
+  <Dropdown
+    bind:visible={isDropdownVisible}
+    items={itemsState}
+    {empty}
+    onclick={onClick}
+    onremove={onRemove}
+  />
 </div>

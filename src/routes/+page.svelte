@@ -77,7 +77,14 @@
   <Header />
 
   <main use:autoAnimate class="px-4 py-8 max-w-4xl mx-auto">
-    <Searchbar items={searchProducts}>
+    <Searchbar
+      placeholder="Add products"
+      items={searchProducts}
+      onremove={(item) => {
+        if (!item.data) return;
+        storage.persistentProducts.remove(item.data);
+      }}
+    >
       {#snippet empty(closeDropdown)}
         <button
           class="flex gap-1.5 items-center px-2 hover:bg-purple-50/50 text-sm cursor-pointer w-full"
@@ -92,7 +99,7 @@
             <Plus className="size-4 stroke-3" />
           </div>
           <span class="text-sm text-gray-600"
-            >No more products to include. Create new product
+            >No products to include. Create new product
           </span>
         </button>
       {/snippet}

@@ -5,8 +5,16 @@
   let {
     visible = $bindable(),
     items,
+    onclick: onClick,
+    onremove: onRemove,
     empty,
-  }: { visible: boolean; items: ListItem<T>[]; empty: Snippet<[()=>void]> } = $props();
+  }: {
+    visible: boolean;
+    items: ListItem<T>[];
+    onclick?: (items: ListItem<T>) => void;
+    onremove?: (items: ListItem<T>) => void;
+    empty: Snippet<[() => void]>;
+  } = $props();
 </script>
 
 {#if visible}
@@ -22,6 +30,7 @@
             onclick={() => {
               visible = false;
               item.onClick?.(item);
+              onClick?.(item);
             }}
           >
             {item.title}
@@ -30,6 +39,7 @@
             class="p-2 items-center group"
             onclick={() => {
               item.onRemove?.(item);
+              onRemove?.(item);
             }}
           >
             <div
