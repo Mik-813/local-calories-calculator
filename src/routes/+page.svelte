@@ -77,7 +77,26 @@
   <Header />
 
   <main use:autoAnimate class="px-4 py-8 max-w-4xl mx-auto">
-    <Searchbar items={searchProducts} />
+    <Searchbar items={searchProducts}>
+      {#snippet empty(closeDropdown)}
+        <button
+          class="flex gap-1.5 items-center px-2 hover:bg-purple-50/50 text-sm cursor-pointer w-full"
+          onclick={() => {
+            closeDropdown();
+            addItem();
+          }}
+        >
+          <div
+            class="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full text-white p-1.5 m-1.5"
+          >
+            <Plus className="size-4 stroke-3" />
+          </div>
+          <span class="text-sm text-gray-600"
+            >No more products to include. Create new product
+          </span>
+        </button>
+      {/snippet}
+    </Searchbar>
     <div class="p-2"></div>
     {#each hotProducts as _, i}
       <RecipeItemComponent
