@@ -7,7 +7,6 @@
   import NoData from "$lib/components/reusable/NoData.svelte";
   import ArrowPath from "$lib/icons/ArrowPathIcon.svelte";
   import Searchbar from "$lib/components/reusable/Searchbar.svelte";
-  import Dropdown from "$lib/components/reusable/Dropdown.svelte";
 
   let hotProducts = $state(storage.hotProducts.get());
 
@@ -28,6 +27,10 @@
 
   function addItem() {
     hotProducts.push({ consumption_g: 0 });
+  }
+
+  function addFromSearch(item: ListItem<Product>) {
+    hotProducts.push({ consumption_g: 0, ...item.data });
   }
 
   function removeHotProduct(hotProduct: Product) {
@@ -53,9 +56,18 @@
   $effect(() => storage.hotProducts.set(hotProducts));
 
   const searchProducts = $derived(
-    storage.persistentProducts.get().map((x) => {
-      return { title: x.title, data: x } as ListItem<Product>;
-    }),
+    storage.persistentProducts
+      .get()
+      .filter((x) => {
+        return hotProducts.every((y) => y.title !== x.title);
+      })
+      .map((x) => {
+        return {
+          title: x.title,
+          data: x,
+          onClick: addFromSearch,
+        } as ListItem<Product>;
+      }),
   );
 </script>
 
