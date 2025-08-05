@@ -19,10 +19,17 @@ declare global {
 		date?: string;
 	}
 
-  interface Settings {
-    currency_sign?: string;
-    language: "en" | "pl" | "ua";
-  }
+	interface Settings {
+		currency_sign?: string;
+		language: "en" | "pl" | "ua";
+	}
+
+	interface ListItem<T> {
+		title: string
+		data?: T
+		onClick?: (option: ListItem<T>) => void
+		onRemove?: (option: ListItem<T>) => void
+	}
 }
 
 export { };

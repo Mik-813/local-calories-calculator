@@ -1,22 +1,24 @@
 <script lang="ts">
     let {
         value = $bindable(),
-        onfocus: onFocus,
-        onchange: onChange,
-        onpinput: onInput,
         error = $bindable(""),
         label,
         placeholder,
         type = "text",
+        onfocus: onFocus,
+        onblur: onBlur,
+        oninput: onInput,
+        onchange: onChange,
     }: {
-        label: string;
-        placeholder?: string,
-        onfocus?: () => void;
-        onchange?: (value: string) => void;
-        onpinput?: (value: string) => void;
-        error?: string;
         value?: string | number;
+        error?: string;
+        label?: string;
+        placeholder?: string;
         type?: string;
+        onfocus?: () => void;
+        onblur?: () => void;
+        oninput?: (value: string) => void;
+        onchange?: (value: string) => void;
     } = $props();
 
     let isFocused = $state(false);
@@ -45,14 +47,19 @@
             bind:value
             {type}
             {placeholder}
-            onchange={(e: any) => onChange?.(e.target.value)}
-            oninput={(e: any) => onInput?.(e.target.value)}
+            onchange={(e) => onChange?.(e.currentTarget.value)}
+            oninput={(e) => onInput?.(e.currentTarget.value)}
             onfocus={() => {
                 isFocused = true;
                 onFocus?.();
             }}
-            onblur={() => (isFocused = false)}
-            class="w-full border { error ? 'border-red-200' : 'border-gray-200'} bg-white focus:ring-2 focus:border-transparent rounded px-3 py-3 transition-all duration-200 outline-none text-sm
+            onblur={() => {
+                isFocused = false;
+                onBlur?.();
+            }}
+            class="w-full border {error
+                ? 'border-red-200'
+                : 'border-gray-200'} bg-white focus:ring-2 focus:border-transparent rounded px-3 py-3 transition-all duration-200 outline-none text-sm
             {error ? 'focus:ring-red-500' : 'focus:ring-purple-600'}"
         />
     </div>

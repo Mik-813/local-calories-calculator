@@ -6,6 +6,8 @@
   import { storage } from "$lib/states/storage.svelte";
   import NoData from "$lib/components/reusable/NoData.svelte";
   import ArrowPath from "$lib/icons/ArrowPathIcon.svelte";
+  import Searchbar from "$lib/components/reusable/Searchbar.svelte";
+  import Dropdown from "$lib/components/reusable/Dropdown.svelte";
 
   let hotProducts = $state(storage.hotProducts.get());
 
@@ -49,6 +51,12 @@
   }
 
   $effect(() => storage.hotProducts.set(hotProducts));
+
+  const searchProducts = $derived(
+    storage.persistentProducts.get().map((x) => {
+      return { title: x.title, data: x } as ListItem<Product>;
+    }),
+  );
 </script>
 
 <div
@@ -56,7 +64,9 @@
 >
   <Header />
 
-  <main use:autoAnimate class="px-4 py-8 sm:px-6 lg:px-8 max-w-4xl mx-auto">
+  <main use:autoAnimate class="px-4 py-8 max-w-4xl mx-auto">
+    <Searchbar items={searchProducts} />
+    <div class="p-2"></div>
     {#each hotProducts as _, i}
       <RecipeItemComponent
         bind:hotProduct={hotProducts[i]}

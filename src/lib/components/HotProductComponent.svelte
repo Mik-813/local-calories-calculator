@@ -89,7 +89,7 @@
       <CustomInput
         bind:value={title}
         bind:error={titleError}
-        onpinput={setTitle}
+        oninput={setTitle}
         onfocus={() => (isVisibleDropdown = true)}
         label="Title"
       />
