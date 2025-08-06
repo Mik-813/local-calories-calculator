@@ -34,10 +34,10 @@
   ></div>
 {/if}
 <!-- Sidebar -->
+
 <div
-  class="fixed top-0 right-0 h-full w-80 max-w-[90vw] bg-gradient-to-b from-purple-600 via-purple-700 to-indigo-600 text-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out {sidebarOpen
-    ? 'translate-x-0'
-    : 'translate-x-full'}"
+  class="fixed top-0 left-full h-full w-80 max-w-[90vw] bg-gradient-to-b from-purple-600 via-purple-700 to-indigo-600 text-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out
+  {sidebarOpen ? '-translate-x-full' : 'translate-x-0'}"
 >
   <div class="p-6">
     <!-- Sidebar Header -->
