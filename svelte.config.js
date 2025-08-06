@@ -9,6 +9,7 @@ const config = {
 		adapter: adapterStatic({
 			pages: 'build',
 			assets: 'build',
+			fallback: 'index.html'
 		})
 	}
 };
