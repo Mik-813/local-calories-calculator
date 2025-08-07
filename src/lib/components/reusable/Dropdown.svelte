@@ -19,7 +19,7 @@
 
 {#if visible}
   <ul
-    class="absolute inset-x-0 bg-white shadow rounded py-2 z-50"
+    class="absolute inset-x-0 bg-white shadow rounded-lg py-2 z-50"
     transition:fly={{ duration: 200 }}
   >
     {#if items.length > 0}

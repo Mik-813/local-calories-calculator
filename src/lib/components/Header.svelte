@@ -1,37 +1,18 @@
 <script lang="ts">
   import { storage } from "$lib/states/storage.svelte";
-  import ProgressBarItem from "$lib/components/reusable/UnitProgressBar.svelte";
   import Sidebar from "$lib/components/Sidebar.svelte";
-  import autoAnimate from "@formkit/auto-animate";
   import ImportIcon from "$lib/icons/ExportIcon.svelte";
   import ExportIcon from "$lib/icons/ImportIcon.svelte";
   import SettingsIcon from "$lib/icons/SettingsIcon.svelte";
   import Modal from "$lib/components/reusable/Modal.svelte";
   import Settings from "$lib/components/Settings.svelte";
 
-  const hotProducts = $derived(storage.hotProducts.get());
   let isSidebarOpen = $state(false);
   let isSettingsOpen = $state(false);
 
-  const currentCalories = $derived(
-    hotProducts.reduce(
-      (acc, hotProduct) =>
-        acc +
-        ((hotProduct.kcal_100g || 0) * (hotProduct.consumption_g || 0)) / 100,
-      0,
-    ),
-  );
-
-  const maxCalories = $derived(
-    hotProducts.reduce(
-      (acc, hotProduct) =>
-        acc + ((hotProduct.kcal_100g || 0) * (hotProduct.weight || 0)) / 100,
-      0,
-    ),
-  );
-
   function exportToCSV() {
-    const csv = storage.persistentProducts.get()
+    const csv = storage.persistentProducts
+      .get()
       .map((p) => Object.values(p).join(","))
       .join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
@@ -77,36 +58,22 @@
 </script>
 
 <header
-  class="relative bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-600 text-white shadow-lg"
+  class="relative bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-600 text-white p-4"
 >
-  <div class="px-4 py-6 sm:px-6 lg:px-8">
-    <div class="flex items-center justify-between">
-      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">
-        Calories Calculator
-      </h1>
+  <div class="flex items-center justify-between">
+    <h1 class="text-xl font-bold tracking-tight">Calories Calculator</h1>
 
-      <button
-        onclick={() => (isSidebarOpen = true)}
-        class="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors duration-200 backdrop-blur-sm"
-        aria-label="Open menu"
-      >
-        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-          <circle cx="12" cy="5" r="2" />
-          <circle cx="12" cy="12" r="2" />
-          <circle cx="12" cy="19" r="2" />
-        </svg>
-      </button>
-    </div>
-  </div>
-  <div use:autoAnimate>
-    {#if maxCalories}
-      <ProgressBarItem
-        currentValue={currentCalories}
-        maxValue={maxCalories}
-        title="Calories:"
-        unit="kcal"
-      />
-    {/if}
+    <button
+      onclick={() => (isSidebarOpen = true)}
+      class="p-1 rounded-full bg-white/10 hover:bg-white/20 transition-colors duration-200 backdrop-blur-sm"
+      aria-label="Open menu"
+    >
+      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+        <circle cx="12" cy="5" r="2" />
+        <circle cx="12" cy="12" r="2" />
+        <circle cx="12" cy="19" r="2" />
+      </svg>
+    </button>
   </div>
   <Sidebar
     bind:sidebarOpen={isSidebarOpen}
@@ -137,6 +104,8 @@
     ]}
   />
   <Modal bind:visible={isSettingsOpen} title="Settings">
-    <Settings />
+    {#snippet content()}
+      <Settings />
+    {/snippet}
   </Modal>
 </header>

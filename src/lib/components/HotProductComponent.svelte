@@ -17,7 +17,7 @@
     scrollIntoHotProduct: (hotProduct: Product) => void;
   } = $props();
 
-  let isWrapped = $state(false);
+  let isWrapped = $state(true);
   let isVisibleDropdown = $state(false);
   let containerRef: HTMLDivElement;
 

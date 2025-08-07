@@ -1,31 +1,30 @@
 <script lang="ts">
-  const { currentValue, maxValue, title, unit, extra="of daily goal" } = $props();
+  import { fade } from "svelte/transition";
+  import millify from "millify";
+  import { useWeighter } from "$lib/utlis/use";
+
+  const { reduction, title }: Stat = $props();
+
+  const [currentValue, maxValue] = $derived(useWeighter(reduction));
   const progressPercentage = $derived((currentValue / maxValue) * 100);
+  const left = $derived(maxValue - currentValue);
 </script>
 
-<div class="px-4 pb-6 sm:px-6 lg:px-8">
-  <div class="backdrop-blur-sm rounded-2xl p-4 sm:p-6">
-    <div
-      class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
-    >
-      <div class="text-sm sm:text-base font-medium">
-        {title} {currentValue}/{maxValue} {unit}
-      </div>
-      <div class="text-sm sm:text-base font-medium">
-        Left: {maxValue - currentValue} {unit}
-      </div>
+{#if left}
+  <div class="flex flex-col gap-2">
+    <div class="font-semibold">
+      {title}
     </div>
 
-    <div class="mt-4">
-      <div class="w-full bg-white/20 rounded-full h-2 overflow-hidden">
-        <div
-          class="h-full bg-purple-300 rounded-full transition-all duration-500 ease-out"
-          style="width: {Math.min(progressPercentage, 100)}%"
-        ></div>
-      </div>
-      <div class="mt-2 text-xs sm:text-sm text-white/80 text-center">
-        {progressPercentage.toFixed(1)}% {extra}
-      </div>
+    <div class="flex justify-between text-xs">
+      <span>{millify(currentValue)}</span>
+      <span transition:fade={{ duration: 100 }}>{millify(left)} left</span>
+    </div>
+    <div class="w-full bg-white/20 rounded-full h-2 overflow-hidden">
+      <div
+        class="h-full bg-purple-300 rounded-full transition-all duration-500 ease-out"
+        style="width: {Math.min(progressPercentage, 100)}%"
+      ></div>
     </div>
   </div>
-</div>
+{/if}

@@ -1,5 +1,8 @@
 <script lang="ts">
+    import { onMount } from "svelte";
+
     let {
+        initFocus,
         value = $bindable(),
         error = $bindable(""),
         label,
@@ -9,7 +12,9 @@
         onblur: onBlur,
         oninput: onInput,
         onchange: onChange,
+        onkeydown: onKeyDown,
     }: {
+        initFocus?: boolean;
         value?: string | number;
         error?: string;
         label?: string;
@@ -19,12 +24,19 @@
         onblur?: () => void;
         oninput?: (value: string) => void;
         onchange?: (value: string) => void;
+        onkeydown?: (value: string) => void;
     } = $props();
 
     let isFocused = $state(false);
     let hasValue = $derived(value !== undefined && value !== "");
     let isActive = $derived(isFocused || hasValue);
     let inputElement: HTMLInputElement | undefined = $state();
+
+    onMount(() => {
+        if (initFocus) {
+            inputElement?.focus();
+        }
+    });
 </script>
 
 <div class="flex flex-col gap-0">
@@ -51,6 +63,7 @@
             {placeholder}
             onkeydown={(e) => {
                 e.key === "Enter" && e.currentTarget.blur();
+                onKeyDown?.(e.key);
             }}
             onchange={(e) => onChange?.(e.currentTarget.value)}
             oninput={(e) => onInput?.(e.currentTarget.value)}

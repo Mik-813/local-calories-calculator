@@ -1,7 +1,7 @@
 import { SvelteSet } from "svelte/reactivity";
 
 export class StorageItem<T extends object> {
-    private data: T;
+    protected data: T;
     readonly key: string;
     readonly storage: Storage;
     private callbacks = new SvelteSet<(data: T) => void>();

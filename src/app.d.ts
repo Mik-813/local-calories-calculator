@@ -5,12 +5,13 @@ declare global {
 
 	interface Product {
 		title?: string;
-		weight?: number;
 		price?: number;
 		kcal_100g?: number;
+		weight: number;
 	}
 
 	interface Product extends Product {
+		[key: string]
 		consumption_g: number;
 	}
 
@@ -29,6 +30,11 @@ declare global {
 		data?: T
 		onClick?: (option: ListItem<T>) => void
 		onRemove?: (option: ListItem<T>) => void
+	}
+
+	interface Stat {
+		title: string;
+		reduction: (product: Product) => number;
 	}
 }
 

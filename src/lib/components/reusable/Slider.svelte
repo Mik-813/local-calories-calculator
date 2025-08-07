@@ -27,10 +27,6 @@
     }
   });
 
-  $effect(() => {
-    if (maxValue < 1) maxValue = 1;
-  });
-
   let isMaxValueChanging = $state(false);
 </script>
 
@@ -45,7 +41,7 @@
         class="bg-gray-800 text-white px-3 py-2 rounded-lg text-sm font-medium shadow-lg"
       >
         <span>
-          {currentValue}g&nbsp;/&nbsp;{((currentValue / maxValue) * 100) >> 0}%
+          {((currentValue / maxValue) * 100) >> 0}%
         </span>
         <div
           class="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"
@@ -79,7 +75,17 @@
   </div>
 
   <Modal bind:visible={isMaxValueChanging}>
-    <CustomInput bind:value={maxValue} label="Weight (g)" type="number" />
+    {#snippet content(closeModal)}
+      <CustomInput
+        bind:value={maxValue}
+        initFocus={true}
+        onkeydown={(key) => key === "Enter" && closeModal()}
+        label="Weight (g)"
+        type="number"
+      />
+      
+      <button onclick={closeModal} class="text-gray-500 px-1"> ✕ </button>
+    {/snippet}
   </Modal>
 </div>
 

@@ -7,6 +7,7 @@
   import NoData from "$lib/components/reusable/NoData.svelte";
   import ArrowPath from "$lib/icons/ArrowPathIcon.svelte";
   import Searchbar from "$lib/components/reusable/Searchbar.svelte";
+  import Stats from "$lib/components/Stats.svelte";
 
   let hotProducts = $state(storage.hotProducts.get());
 
@@ -26,11 +27,11 @@
   }
 
   function addItem() {
-    hotProducts.push({ consumption_g: 0 });
+    hotProducts.push({ consumption_g: 0, weight: 0 });
   }
 
   function addFromSearch(item: ListItem<Product>) {
-    hotProducts.push({ consumption_g: 0, ...item.data });
+    hotProducts.push({ consumption_g: 0, weight: 0, ...item.data });
   }
 
   function removeHotProduct(hotProduct: Product) {
@@ -72,11 +73,21 @@
 </script>
 
 <div
-  class="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50"
+  class="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 overflow-x-clip"
 >
+
   <Header />
 
-  <main use:autoAnimate class="px-4 py-8 max-w-4xl mx-auto">
+  <div class="sticky top-0 z-50
+    -mt-4 bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-600 text-white p-4 flex flex-col gap-4">
+    <Stats
+      stats={[
+        {
+          title: "Calories (kcal)",
+          reduction: (p) => (p.kcal_100g ?? 0) / 100,
+        },
+      ]}
+    />
     <Searchbar
       placeholder="Add products"
       items={searchProducts}
@@ -98,12 +109,12 @@
           >
             <Plus className="size-4 stroke-3" />
           </div>
-          <span class="text-sm text-gray-600"
-            >No products to include. Create new product
-          </span>
+          <span class="text-purple-600 text-sm">Create new product</span>
         </button>
       {/snippet}
     </Searchbar>
+  </div>
+  <main use:autoAnimate class="px-4 py-8 max-w-4xl mx-auto">
     <div class="p-2"></div>
     {#each hotProducts as _, i}
       <RecipeItemComponent
