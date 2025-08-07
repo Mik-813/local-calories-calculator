@@ -12,6 +12,9 @@
   const debounceShowTooltip = createDebouncer(() => (showTooltip = false), 200);
 
   function onThumbMove() {
+    if (document.activeElement instanceof HTMLInputElement) {
+      document.activeElement.blur();
+    }
     showTooltip = true;
     debounceShowTooltip();
   }
@@ -42,7 +45,7 @@
       </div>
     </div>
   {/if}
-    
+
   <div class="relative">
     <input
       id="budget"

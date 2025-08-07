@@ -24,6 +24,7 @@
     let isFocused = $state(false);
     let hasValue = $derived(value !== undefined && value !== "");
     let isActive = $derived(isFocused || hasValue);
+    let inputElement: HTMLInputElement | undefined = $state();
 </script>
 
 <div class="flex flex-col gap-0">
@@ -45,6 +46,7 @@
         <input
             id="inputField"
             bind:value
+            bind:this={inputElement}
             {type}
             {placeholder}
             onkeydown={(e) => {

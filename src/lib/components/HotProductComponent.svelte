@@ -4,7 +4,6 @@
   import Chevron from "$lib/icons/ChevronDownIcon.svelte";
   import CustomInput from "$lib/components/reusable/CustomInput.svelte";
   import autoAnimate from "@formkit/auto-animate";
-  import Dropdown from "$lib/components/ProductsDropdown.svelte";
   import { storage } from "$lib/states/storage.svelte";
 
   const hotProducts = $derived(storage.hotProducts.get());
@@ -12,7 +11,6 @@
   let {
     hotProduct = $bindable(),
     removeItem,
-    scrollIntoHotProduct,
   }: {
     hotProduct: Product;
     removeItem: (items: Product) => void;
@@ -31,11 +29,6 @@
       });
     }
   });
-
-  function insertProductData(product: Product): void {
-    hotProduct = { ...hotProduct, ...product };
-    title = hotProduct.title;
-  }
 
   function toggleWrapping() {
     isWrapped = !isWrapped;
@@ -92,11 +85,6 @@
         oninput={setTitle}
         onfocus={() => (isVisibleDropdown = true)}
         label="Title"
-      />
-      <Dropdown
-        bind:visible={isVisibleDropdown}
-        onPersistentClick={insertProductData}
-        onHotClick={scrollIntoHotProduct}
       />
 
       <CustomInput
