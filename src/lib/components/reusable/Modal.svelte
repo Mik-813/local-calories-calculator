@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { clickOutside } from "$lib/actions/clickOutside";
+  import { onClickOutside } from "$lib/actions/clickOutside";
   import type { Snippet } from "svelte";
   import { fade } from "svelte/transition";
 
@@ -16,7 +16,7 @@
 {#if visible}
   <div
     transition:fade={{ duration: 150 }}
-    use:clickOutside={close}
+    use:onClickOutside={close}
     class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center"
   >
     <div class="flex flex-col gap-2 bg-white rounded-lg shadow-lg p-6 w-full max-w-md">

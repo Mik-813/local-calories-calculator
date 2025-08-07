@@ -47,6 +47,9 @@
             bind:value
             {type}
             {placeholder}
+            onkeydown={(e) => {
+                e.key === "Enter" && e.currentTarget.blur();
+            }}
             onchange={(e) => onChange?.(e.currentTarget.value)}
             oninput={(e) => onInput?.(e.currentTarget.value)}
             onfocus={() => {

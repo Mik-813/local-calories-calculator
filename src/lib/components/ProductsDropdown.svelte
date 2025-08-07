@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { clickOutside } from "$lib/actions/clickOutside";
+  import { onClickOutside } from "$lib/actions/clickOutside";
   import Eye from "$lib/icons/EyeIcon.svelte";
   import { storage } from "$lib/states/storage.svelte";
 
@@ -97,7 +97,7 @@
 {#if visible}
   <ul
     class="w-fit bg-white shadow rounded py-2 absolute z-50"
-    use:clickOutside={() => (visible = false)}
+    use:onClickOutside={() => (visible = false)}
   >
     {#each hotProducts as hotProduct}
       {@render dropdownItem(hotProduct, false)}

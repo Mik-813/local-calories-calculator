@@ -1,9 +1,7 @@
-import type { Action } from "svelte/action";
-
-export const clickOutside: Action<HTMLElement, () => void> = (node, param) => {
+export function onClickOutside<T extends HTMLElement>(node: T, param: (node: T) => void) {
 	function handleClick(e: MouseEvent) {
 		if (!node.contains(e.target as Node)) {
-			param();
+			param(node);
 		}
 	}
 

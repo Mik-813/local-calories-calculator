@@ -1,7 +1,7 @@
 <script lang="ts" generics="T">
   import Fuse from "fuse.js";
   import Dropdown from "$lib/components/reusable/Dropdown.svelte";
-  import { clickOutside } from "$lib/actions/clickOutside";
+  import { onClickOutside } from "$lib/actions/clickOutside";
   import type { Snippet } from "svelte";
 
   const {
@@ -36,7 +36,7 @@
 </script>
 
 <div
-  use:clickOutside={() => (isDropdownVisible = false)}
+  use:onClickOutside={() => (isDropdownVisible = false)}
   class="relative space-y-2"
 >
   <input
