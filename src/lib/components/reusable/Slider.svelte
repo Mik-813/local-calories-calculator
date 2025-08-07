@@ -1,11 +1,13 @@
 <script lang="ts">
   import { createDebouncer } from "$lib/utlis/timers";
   import { fade } from "svelte/transition";
+  import Modal from "$lib/components/reusable/Modal.svelte";
+  import CustomInput from "$lib/components/reusable/CustomInput.svelte";
 
   let {
-    currentValue = $bindable(),
-    maxValue,
-  }: { currentValue: number; maxValue: number } = $props();
+    currentValue = $bindable(0),
+    maxValue = $bindable(1),
+  }: { currentValue?: number; maxValue?: number } = $props();
 
   let showTooltip = $state(false);
 
@@ -24,6 +26,12 @@
       currentValue = maxValue;
     }
   });
+
+  $effect(() => {
+    if (maxValue < 1) maxValue = 1;
+  });
+
+  let isMaxValueChanging = $state(false);
 </script>
 
 <div class="px-1 relative">
@@ -60,10 +68,19 @@
       {(currentValue / maxValue) * 100}%, #e9d5ff 100%)"
     />
   </div>
-  <div class="flex justify-between text-sm text-gray-600 mt-2">
-    <span>{currentValue}g</span>
-    <span>{maxValue}g</span>
+  <div class="flex justify-between text-sm mt-2">
+    <span class="text-gray-600">{currentValue}g</span>
+    <button
+      class="text-purple-600"
+      onclick={() => {
+        isMaxValueChanging = true;
+      }}>{maxValue}g</button
+    >
   </div>
+
+  <Modal bind:visible={isMaxValueChanging}>
+    <CustomInput bind:value={maxValue} label="Weight (g)" type="number" />
+  </Modal>
 </div>
 
 <style>

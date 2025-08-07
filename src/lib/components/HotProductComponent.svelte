@@ -99,20 +99,12 @@
         type="number"
       />
 
-      <hr class="my-4 border-gray-200 border-1 rounded-4xl w-12 mx-auto" />
+      <hr class="mb-4 mt-2 border-gray-200 border-1 rounded-4xl w-12 mx-auto" />
     {/if}
 
-    <CustomInput
-      bind:value={hotProduct.weight}
-      label="Weight (g)"
-      type="number"
+    <Slider
+      bind:currentValue={hotProduct.consumption_g}
+      bind:maxValue={hotProduct.weight}
     />
-
-    {#if hotProduct?.weight}
-      <Slider
-        bind:currentValue={hotProduct.consumption_g}
-        maxValue={hotProduct.weight}
-      />
-    {/if}
   </ul>
 </div>
