@@ -26,7 +26,7 @@
   });
 </script>
 
-<div class="px-1 py-1 relative">
+<div class="px-1 relative">
   {#if showTooltip}
     <div
       transition:fade={{ duration: 200 }}

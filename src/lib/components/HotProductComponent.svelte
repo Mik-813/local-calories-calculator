@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import Slider from "$lib/components/reusable/Slider.svelte";
-  import Chevron from "$lib/icons/ChevronDownIcon.svelte";
+  import ChevronDown from "$lib/icons/ChevronDownIcon.svelte";
   import CustomInput from "$lib/components/reusable/CustomInput.svelte";
   import autoAnimate from "@formkit/auto-animate";
   import { storage } from "$lib/states/storage.svelte";
@@ -59,9 +59,9 @@
   data-hot-product-title={hotProduct.title}
 >
   <div class="flex items-center justify-between">
-    <button onclick={() => toggleWrapping()} class="text-gray-500 px-1">
+    <button onclick={toggleWrapping} class="text-gray-500 px-1">
       <div style="rotate: {isWrapped ? -90 : 0}deg; transition: rotate 0.2s;">
-        <Chevron className="size-5" />
+        <ChevronDown className="size-5" />
       </div>
     </button>
     <span
@@ -77,8 +77,8 @@
   </div>
 
   <ul use:autoAnimate>
+    <div class="pt-4"></div>
     {#if !isWrapped}
-      <div class="pt-4"></div>
       <CustomInput
         bind:value={title}
         bind:error={titleError}
@@ -100,19 +100,19 @@
       />
 
       <hr class="my-4 border-gray-200 border-1 rounded-4xl w-12 mx-auto" />
+    {/if}
 
-      <CustomInput
-        bind:value={hotProduct.weight}
-        label="Weight (g)"
-        type="number"
+    <CustomInput
+      bind:value={hotProduct.weight}
+      label="Weight (g)"
+      type="number"
+    />
+
+    {#if hotProduct?.weight}
+      <Slider
+        bind:currentValue={hotProduct.consumption_g}
+        maxValue={hotProduct.weight}
       />
-
-      {#if hotProduct?.weight}
-        <Slider
-          bind:currentValue={hotProduct.consumption_g}
-          maxValue={hotProduct.weight}
-        />
-      {/if}
     {/if}
   </ul>
 </div>
