@@ -1,4 +1,5 @@
 <script lang="ts">
+  import convert, { type Mass, type Unit } from "convert-units";
   import { createDebouncer } from "$lib/utlis/timers";
   import { fade } from "svelte/transition";
   import Modal from "$lib/components/reusable/Modal.svelte";
@@ -28,6 +29,16 @@
   });
 
   let isMaxValueChanging = $state(false);
+
+  function prettify(value: number, unitFrom: Unit) {
+    const obj = convert(value || 1)
+      .from(unitFrom)
+      .toBest();
+    if (value === 0) obj.val = 0;
+    return obj.val + obj.unit;
+  }
+  const prettifiedCurrentValue = $derived(prettify(currentValue, "g"));
+  const prettifiedMaxValue = $derived(prettify(maxValue, "g"));
 </script>
 
 <div class="px-1 relative">
@@ -65,12 +76,12 @@
     />
   </div>
   <div class="flex justify-between text-sm mt-2">
-    <span class="text-gray-600">{currentValue}g</span>
+    <span class="text-gray-600">{prettifiedCurrentValue}</span>
     <button
       class="text-purple-600"
       onclick={() => {
         isMaxValueChanging = true;
-      }}>{maxValue}g</button
+      }}>{prettifiedMaxValue}</button
     >
   </div>
 
@@ -83,8 +94,6 @@
         label="Weight (g)"
         type="number"
       />
-      
-      <button onclick={closeModal} class="text-gray-500 px-1"> ✕ </button>
     {/snippet}
   </Modal>
 </div>

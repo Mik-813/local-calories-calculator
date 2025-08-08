@@ -20,8 +20,8 @@
 
 {#if visible}
   <div
-    transition:fade={{ duration: 500 }}
-    class="flex flex-col justify-around p-2 bg-black/50 z-50
+    transition:fade={{ duration: 150 }}
+    class="flex flex-col justify-around items-center p-2 bg-black/50 z-50
     fixed inset-0"
   >
     <div></div>
@@ -35,9 +35,10 @@
         <!-- Substituted with <div> -->
         <div
           aria-label="close button"
+          role="button"
           tabindex="0"
           onclick={closeModal}
-          class="text-gray-500 px-1"
+          class="text-gray-500 px-1 cursor-pointer"
         >
           ✕
         </div>
