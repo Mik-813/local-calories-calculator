@@ -43,6 +43,7 @@
   <input
     bind:value
     onclick={() => (isDropdownVisible = true)}
+    onblur={() => (value = "")}
     {placeholder}
     class="w-full border-none rounded-md text-sm text-white bg-white/20 outline-none transition-all ring-0 placeholder:text-white/70 py-3 px-4"
     type="text"
