@@ -12,7 +12,7 @@
     placeholder,
   }: {
     items: ListItem<T>[];
-    empty: Snippet<[() => void]>;
+    empty: Snippet<[() => void, string]>;
     onclick?: (items: ListItem<T>) => void;
     onremove?: (items: ListItem<T>) => void;
     placeholder?: string;
@@ -35,10 +35,11 @@
   });
 </script>
 
-<div
-  use:onClickOutside={() => (isDropdownVisible = false)}
-  class="relative"
->
+{#snippet emptyWrapper(fn: () => void)}
+  {@render empty(fn, value)}
+{/snippet}
+
+<div use:onClickOutside={() => (isDropdownVisible = false)} class="relative">
   <input
     bind:value
     onclick={() => (isDropdownVisible = true)}
@@ -49,7 +50,7 @@
   <Dropdown
     bind:visible={isDropdownVisible}
     items={itemsState}
-    {empty}
+    empty={emptyWrapper}
     onclick={onClick}
     onremove={onRemove}
   />

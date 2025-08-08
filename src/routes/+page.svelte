@@ -1,6 +1,6 @@
 <script lang="ts">
   import Header from "$lib/components/Header.svelte";
-  import RecipeItemComponent from "$lib/components/HotProductComponent.svelte";
+  import HotProductComponent from "$lib/components/HotProductComponent.svelte";
   import Plus from "$lib/icons/PlusIcon.svelte";
   import autoAnimate from "@formkit/auto-animate";
   import { storage } from "$lib/states/storage.svelte";
@@ -8,30 +8,34 @@
   import ArrowPath from "$lib/icons/ArrowPathIcon.svelte";
   import Searchbar from "$lib/components/reusable/Searchbar.svelte";
   import Stats from "$lib/components/Stats.svelte";
+  import MagnifierIcon from "$lib/icons/MagnifierIcon.svelte";
 
   let hotProducts = $state(storage.hotProducts.get());
 
-  function scrollIntoHotProduct(product: Product) {
-    const index = hotProducts.findIndex((x) => x === product);
-    if (index !== -1) {
-      const element = document.querySelector(
-        `[data-hot-product-title="${hotProducts[index].title}"]`,
-      ) as HTMLElement;
-      if (element) {
-        element.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-      }
-    }
+  function scrollIntoTitle(title: string) {
+    const element = document.querySelector(
+      `[data-hot-product-title="${title}"]`,
+    ) as HTMLElement;
+    if (!element) return;
+
+    element.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+
+    element.classList.add("ring-3", "ring-purple-500");
+    setTimeout(
+      () => element.classList.remove("ring-3", "ring-purple-500"),
+      1000,
+    );
   }
 
-  function addItem() {
-    hotProducts.push({ consumption_g: 0, weight: 0 });
+  function addItem(title: string) {
+    hotProducts.push({ consumption_g: 0, weight: 100, title });
   }
 
   function addFromSearch(item: ListItem<Product>) {
-    hotProducts.push({ consumption_g: 0, weight: 0, ...item.data });
+    hotProducts.push({ consumption_g: 0, weight: 100, ...item.data });
   }
 
   function removeHotProduct(hotProduct: Product) {
@@ -79,7 +83,7 @@
 
   <div
     class="sticky top-0 z-30
-      -mt-4 bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-600 text-white p-4 flex flex-col gap-4"
+      -mt-4 bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-600 p-4 flex flex-col gap-4"
   >
     <Stats
       stats={[
@@ -97,21 +101,37 @@
         storage.persistentProducts.remove(item.data);
       }}
     >
-      {#snippet empty(closeDropdown)}
-        <button
-          class="flex gap-1.5 items-center px-2 hover:bg-purple-50/50 text-sm cursor-pointer w-full"
-          onclick={() => {
-            closeDropdown();
-            addItem();
-          }}
-        >
-          <div
-            class="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full text-white p-1.5 m-1.5"
+      {#snippet empty(closeDropdown, title)}
+        {#if hotProducts.every((hotProduct) => hotProduct.title !== title)}
+          <button
+            class="flex gap-1.5 items-center px-2 hover:bg-purple-50/50 text-sm cursor-pointer w-full"
+            onclick={() => {
+              closeDropdown();
+              addItem(title);
+            }}
           >
-            <Plus className="size-4 stroke-3" />
-          </div>
-          <span class="text-purple-600 text-sm">Create new product</span>
-        </button>
+            <div
+              class="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full text-white p-1.5 m-1.5"
+            >
+              <Plus className="size-4 stroke-3" />
+            </div>
+            <span class="text-purple-600 text-sm">Create new product</span>
+          </button>
+        {:else}
+          <button
+            class="flex gap-0.5 items-center px-2 hover:bg-purple-50/50 text-sm cursor-pointer w-full text-purple-600"
+            onclick={() => {
+              closeDropdown();
+              scrollIntoTitle(title);
+            }}
+          >
+            <div class="p-1.5">
+              <MagnifierIcon className="size-7 stroke-[1.5]" />
+            </div>
+
+            <span class="text-sm">{title || "Locate untitled product"}</span>
+          </button>
+        {/if}
       {/snippet}
     </Searchbar>
   </div>
@@ -123,10 +143,9 @@
     >
     <div class="p-2"></div>
     {#each hotProducts as _, i}
-      <RecipeItemComponent
+      <HotProductComponent
         bind:hotProduct={hotProducts[i]}
         removeItem={removeHotProduct}
-        {scrollIntoHotProduct}
       />
     {/each}
     {#if !hotProducts.length}

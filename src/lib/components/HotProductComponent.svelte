@@ -14,7 +14,6 @@
   }: {
     hotProduct: Product;
     removeItem: (items: Product) => void;
-    scrollIntoHotProduct: (hotProduct: Product) => void;
   } = $props();
 
   let isWrapped = $state(true);
@@ -55,7 +54,7 @@
 
 <div
   bind:this={containerRef}
-  class="relative bg-white rounded-lg p-4 mb-4"
+  class="relative bg-white rounded-lg p-4 mb-4 ring-0 transition-all"
   data-hot-product-title={hotProduct.title}
 >
   <div class="flex items-center justify-between">
@@ -69,7 +68,7 @@
         ? 'text-gray-800'
         : 'text-gray-400'}"
     >
-      {hotProduct.title ?? "(Empty title)"}
+      {hotProduct.title || "(Empty title)"}
     </span>
     <button onclick={() => removeItem(hotProduct)} class="text-gray-500 px-1">
       ✕

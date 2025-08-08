@@ -5,7 +5,7 @@
   const { stats }: { stats: Stat[] } = $props();
 </script>
 
-<div use:autoAnimate>
+<div class="text-white" use:autoAnimate>
   {#each stats as stat}
     <UnitProgressBar reduction={stat.reduction} title={stat.title} />
   {/each}
