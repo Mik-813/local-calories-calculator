@@ -94,6 +94,7 @@
       />
 
       <CustomInput
+        value={hotProduct.kcal_100g}
         oninput={(kcal_100g) => {
           setHotProduct({
             ...hotProduct,
@@ -104,7 +105,8 @@
         type="number"
       />
 
-      <CustomInput
+      <!-- <CustomInput
+        value={hotProduct.price}
         oninput={(price) => {
           setHotProduct({
             ...hotProduct,
@@ -113,7 +115,7 @@
         }}
         label="Price (unmanaged currency)"
         type="number"
-      />
+      /> -->
 
       <hr class="mb-4 mt-2 border-gray-200 border-1 rounded-4xl w-12 mx-auto" />
     {/if}

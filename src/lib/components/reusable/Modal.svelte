@@ -24,7 +24,7 @@
     class="flex flex-col justify-around items-center p-2 bg-black/50 z-50
     fixed inset-0"
   >
-    <div></div>
+    <div class="sm:hidden"></div>
     <form
       class="flex flex-col bg-white rounded-lg shadow-lg w-full h-fit max-w-md px-4 py-3 gap-1"
       use:onClickOutside={closeModal}
