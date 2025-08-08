@@ -41,13 +41,6 @@
     if (value === 0) obj.val = 0;
     return obj.val + obj.unit;
   }
-
-  $effect(() => {
-    if (currentValue > maxValue) {
-      currentValue = maxValue;
-      onCurrentValueChange(currentValue);
-    }
-  });
 </script>
 
 <div class="px-1 relative">
