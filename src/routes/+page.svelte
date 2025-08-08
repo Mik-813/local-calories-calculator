@@ -10,8 +10,6 @@
   import Stats from "$lib/components/Stats.svelte";
   import MagnifierIcon from "$lib/icons/MagnifierIcon.svelte";
 
-  let hotProducts = $state(storage.hotProducts.get());
-
   function scrollIntoTitle(title: string) {
     const element = document.querySelector(
       `[data-hot-product-title="${title}"]`,
@@ -30,47 +28,34 @@
     );
   }
 
-  function addItem(title: string) {
-    hotProducts.push({ consumption_g: 0, weight: 100, title });
+  function createHotProduct(title: string) {
+    storage.hotProducts.assign(title, { title, consumption_g: 0, weight: 100 });
   }
 
-  function addFromSearch(item: ListItem<Product>) {
-    hotProducts.push({ consumption_g: 0, weight: 100, ...item.data });
+  function addHotProduct(hp: ListItem<Product>) {
+    if (!hp.data?.title) return;
+    storage.hotProducts.assign(hp.data?.title, { ...hp.data });
   }
 
   function removeHotProduct(hotProduct: Product) {
-    const index = hotProducts.findIndex((x) => x === hotProduct);
-    if (index !== -1) {
-      hotProducts.splice(index, 1);
-    }
+    storage.hotProducts.remove(hotProduct.title);
   }
 
-  function newList() {
-    storage.persistentProducts.push(
-      ...storage.hotProducts.get().filter((x) => {
-        return (
-          x.title &&
-          !storage.unregisteredTitles.get().includes(x.title) &&
-          storage.persistentProducts.get().every((y) => y.title !== x.title)
-        );
-      }),
-    );
-    hotProducts = [];
+  function newList() {  
+    storage.hotProducts
+      .get()
+      .forEach((value, key) => key && storage.persistentProducts.assign(key, value));
+    storage.hotProducts.clear();
   }
-
-  $effect(() => storage.hotProducts.set(hotProducts));
 
   const searchProducts = $derived(
-    storage.persistentProducts
-      .get()
-      .filter((x) => {
-        return hotProducts.every((y) => y.title !== x.title);
-      })
-      .map((x) => {
+    Array.from(storage.persistentProducts.get())
+      .filter(([key]) => !storage.hotProducts.has(key))
+      .map(([key, value]) => {
         return {
-          title: x.title,
-          data: x,
-          onClick: addFromSearch,
+          title: key,
+          data: value,
+          onClick: addHotProduct,
         } as ListItem<Product>;
       }),
   );
@@ -96,18 +81,16 @@
     <Searchbar
       placeholder="Add products"
       items={searchProducts}
-      onremove={(item) => {
-        if (!item.data) return;
-        storage.persistentProducts.remove(item.data);
-      }}
+      onremove={(item) => storage.persistentProducts.remove(item.title)}
+      onclick={addHotProduct}
     >
       {#snippet empty(closeDropdown, title)}
-        {#if hotProducts.every((hotProduct) => hotProduct.title !== title)}
+        {#if !storage.hotProducts.has(title)}
           <button
             class="flex gap-1.5 items-center px-2 hover:bg-purple-50/50 text-sm cursor-pointer w-full"
             onclick={() => {
               closeDropdown();
-              addItem(title);
+              createHotProduct(title);
             }}
           >
             <div
@@ -142,13 +125,10 @@
       onclick={newList}><ArrowPath /> New list</button
     >
     <div class="p-2"></div>
-    {#each hotProducts as _, i}
-      <HotProductComponent
-        bind:hotProduct={hotProducts[i]}
-        removeItem={removeHotProduct}
-      />
+    {#each storage.hotProducts.get() as [_, hotProduct]}
+      <HotProductComponent {hotProduct} onRemove={removeHotProduct} />
     {/each}
-    {#if !hotProducts.length}
+    {#if !storage.hotProducts.size()}
       <NoData />
     {/if}
   </main>

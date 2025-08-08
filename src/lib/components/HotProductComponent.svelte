@@ -9,11 +9,11 @@
   const hotProducts = $derived(storage.hotProducts.get());
 
   let {
-    hotProduct = $bindable(),
-    removeItem,
+    hotProduct,
+    onRemove,
   }: {
     hotProduct: Product;
-    removeItem: (items: Product) => void;
+    onRemove: (product: Product) => void;
   } = $props();
 
   let isWrapped = $state(true);
@@ -42,13 +42,20 @@
       return;
     }
 
-    if (hotProducts.some((hotProduct) => hotProduct.title === title)) {
+    if (hotProducts.get(title)) {
       titleError = "Product already exists";
       return;
     }
 
-    hotProduct.title = title;
+    storage.hotProducts.reset(hotProduct.title, title, {
+      ...hotProduct,
+      title,
+    });
     titleError = "";
+  }
+
+  function setHotProduct(hp: Product) {
+    storage.hotProducts.assign(hotProduct.title, hp);
   }
 </script>
 
@@ -70,7 +77,7 @@
     >
       {hotProduct.title || "(Empty title)"}
     </span>
-    <button onclick={() => removeItem(hotProduct)} class="text-gray-500 px-1">
+    <button onclick={() => onRemove(hotProduct)} class="text-gray-500 px-1">
       ✕
     </button>
   </div>
@@ -87,13 +94,23 @@
       />
 
       <CustomInput
-        bind:value={hotProduct.kcal_100g}
+        oninput={(kcal_100g) => {
+          setHotProduct({
+            ...hotProduct,
+            kcal_100g: Number(kcal_100g),
+          });
+        }}
         label="Calories (kcal/100g)"
         type="number"
       />
 
       <CustomInput
-        bind:value={hotProduct.price}
+        oninput={(price) => {
+          setHotProduct({
+            ...hotProduct,
+            price: Number(price),
+          });
+        }}
         label="Price (unmanaged currency)"
         type="number"
       />
@@ -102,8 +119,19 @@
     {/if}
 
     <Slider
-      bind:currentValue={hotProduct.consumption_g}
-      bind:maxValue={hotProduct.weight}
+      onCurrentValueChange={(consumption_g) =>
+        setHotProduct({
+          ...hotProduct,
+          consumption_g: Number(consumption_g),
+        })}
+      onMaxValueChange={(weight) => {
+        setHotProduct({
+          ...hotProduct,
+          weight: Number(weight),
+        });
+      }}
+      currentValue={hotProduct.consumption_g}
+      maxValue={hotProduct.weight}
     />
   </ul>
 </div>

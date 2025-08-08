@@ -4,7 +4,7 @@ declare global {
 	namespace App { }
 
 	interface Product {
-		title?: string;
+		title: string;
 		price?: number;
 		kcal_100g?: number;
 		weight: number;

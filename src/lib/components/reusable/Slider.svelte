@@ -1,16 +1,26 @@
 <script lang="ts">
-  import convert, { type Mass, type Unit } from "convert-units";
+  import convert, { type Unit } from "convert-units";
   import { createDebouncer } from "$lib/utlis/timers";
   import { fade } from "svelte/transition";
   import Modal from "$lib/components/reusable/Modal.svelte";
   import CustomInput from "$lib/components/reusable/CustomInput.svelte";
 
   let {
-    currentValue = $bindable(0),
-    maxValue = $bindable(1),
-  }: { currentValue?: number; maxValue?: number } = $props();
+    currentValue = 0,
+    maxValue = 1,
+    onCurrentValueChange,
+    onMaxValueChange,
+  }: {
+    currentValue?: number;
+    maxValue?: number;
+    onCurrentValueChange: (value: number) => void;
+    onMaxValueChange: (value: number) => void;
+  } = $props();
 
   let showTooltip = $state(false);
+  let isMaxValueModalVisible = $state(false);
+  const prettifiedCurrentValue = $derived(prettify(currentValue, "g"));
+  const prettifiedMaxValue = $derived(prettify(maxValue, "g"));
 
   const debounceShowTooltip = createDebouncer(() => (showTooltip = false), 200);
 
@@ -22,14 +32,6 @@
     debounceShowTooltip();
   }
 
-  $effect(() => {
-    if (currentValue > maxValue) {
-      currentValue = maxValue;
-    }
-  });
-
-  let isMaxValueChanging = $state(false);
-
   function prettify(value: number, unitFrom: Unit) {
     const obj = convert(value || 1)
       .from(unitFrom)
@@ -37,8 +39,13 @@
     if (value === 0) obj.val = 0;
     return obj.val + obj.unit;
   }
-  const prettifiedCurrentValue = $derived(prettify(currentValue, "g"));
-  const prettifiedMaxValue = $derived(prettify(maxValue, "g"));
+
+  $effect(() => {
+    if (currentValue > maxValue) {
+      currentValue = maxValue;
+      onCurrentValueChange(currentValue);
+    }
+  });
 </script>
 
 <div class="px-1 relative">
@@ -67,8 +74,11 @@
       type="range"
       min="0"
       max={maxValue}
-      bind:value={currentValue}
-      oninput={onThumbMove}
+      value={currentValue}
+      oninput={(e) => {
+        onThumbMove();
+        onCurrentValueChange(Number(e.currentTarget.value));
+      }}
       class="w-full h-2 bg-purple-100 rounded-full appearance-none cursor-pointer slider"
       style="background: linear-gradient(to right, #8b5cf6 0%, #8b5cf6 
       {(currentValue / maxValue) * 100}%, #e9d5ff
@@ -80,15 +90,18 @@
     <button
       class="text-purple-600"
       onclick={() => {
-        isMaxValueChanging = true;
+        isMaxValueModalVisible = true;
       }}>{prettifiedMaxValue}</button
     >
   </div>
 
-  <Modal bind:visible={isMaxValueChanging}>
+  <Modal bind:visible={isMaxValueModalVisible}>
     {#snippet content(closeModal)}
       <CustomInput
-        bind:value={maxValue}
+        value={maxValue}
+        oninput={(value) => {
+          onMaxValueChange(Number(value));
+        }}
         initFocus={true}
         onkeydown={(key) => key === "Enter" && closeModal()}
         label="Weight (g)"
