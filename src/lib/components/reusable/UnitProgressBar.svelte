@@ -16,7 +16,7 @@
       {title}
     </div>
 
-    <div class="flex justify-between text-xs">
+    <div class="flex justify-between text-sm">
       <span>{millify(currentValue)}</span>
       <span transition:fade={{ duration: 100 }}>{millify(left)} left</span>
     </div>

@@ -37,13 +37,13 @@
 
 <div
   use:onClickOutside={() => (isDropdownVisible = false)}
-  class="relative space-y-2"
+  class="relative"
 >
   <input
     bind:value
     onclick={() => (isDropdownVisible = true)}
     {placeholder}
-    class="w-full border-none rounded-md text-sm text-gray-900 bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 shadow-lg outline-none transition-all ring-0 placeholder:text-purple-500 py-3 px-4"
+    class="w-full border-none rounded-md text-sm text-white bg-white/20 outline-none transition-all ring-0 placeholder:text-white/70 py-3 px-4"
     type="text"
   />
   <Dropdown

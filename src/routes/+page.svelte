@@ -73,13 +73,14 @@
 </script>
 
 <div
-  class="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50 overflow-x-clip"
+  class="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50"
 >
-
   <Header />
 
-  <div class="sticky top-0 z-50
-    -mt-4 bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-600 text-white p-4 flex flex-col gap-4">
+  <div
+    class="sticky top-0 z-30
+      -mt-4 bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-600 text-white p-4 flex flex-col gap-4"
+  >
     <Stats
       stats={[
         {
@@ -114,7 +115,12 @@
       {/snippet}
     </Searchbar>
   </div>
+
   <main use:autoAnimate class="px-4 py-8 max-w-4xl mx-auto">
+    <button
+      class="flex gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white p-4 rounded-lg font-bold items-center w-full opacity-85"
+      onclick={newList}><ArrowPath /> New list</button
+    >
     <div class="p-2"></div>
     {#each hotProducts as _, i}
       <RecipeItemComponent
@@ -127,11 +133,4 @@
       <NoData />
     {/if}
   </main>
-
-  <div class="fixed right-0 bottom-0 m-4">
-    <button
-      class="flex gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white p-4 rounded-lg font-bold items-center"
-      onclick={newList}><ArrowPath /> New list</button
-    >
-  </div>
 </div>

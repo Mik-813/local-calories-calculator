@@ -1,6 +1,5 @@
 <script lang="ts" generics="T">
   import type { Snippet } from "svelte";
-  import { fly } from "svelte/transition";
 
   let {
     visible = $bindable(),
@@ -18,10 +17,7 @@
 </script>
 
 {#if visible}
-  <ul
-    class="absolute inset-x-0 bg-white shadow rounded-lg py-2 z-50"
-    transition:fly={{ duration: 200 }}
-  >
+  <ul class="absolute inset-x-0 bg-white shadow rounded-lg py-2 mt-2 z-50">
     {#if items.length > 0}
       {#each items as item}
         <div class="flex justify-between hover:bg-purple-50/50 text-sm">
