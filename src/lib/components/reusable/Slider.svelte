@@ -11,8 +11,8 @@
     onCurrentValueChange,
     onMaxValueChange,
   }: {
-    currentValue?: number;
-    maxValue?: number;
+    currentValue: number;
+    maxValue: number;
     onCurrentValueChange: (value: number) => void;
     onMaxValueChange: (value: number) => void;
   } = $props();
@@ -21,6 +21,8 @@
   let isMaxValueModalVisible = $state(false);
   const prettifiedCurrentValue = $derived(prettify(currentValue, "g"));
   const prettifiedMaxValue = $derived(prettify(maxValue, "g"));
+  let expression = $state(`${maxValue ?? ""}`);
+  let evaluationError = $state("");
 
   const debounceShowTooltip = createDebouncer(() => (showTooltip = false), 200);
 
@@ -98,14 +100,23 @@
   <Modal bind:visible={isMaxValueModalVisible}>
     {#snippet content(closeModal)}
       <CustomInput
-        value={maxValue}
+        error={evaluationError}
+        value={expression}
         oninput={(value) => {
-          onMaxValueChange(Number(value));
+          expression = value;
+          try {
+            if (!expression) throw "Expression is empty";
+            const evaluation = eval(expression);
+            onMaxValueChange(Number(evaluation));
+            evaluationError = "";
+          } catch {
+            evaluationError = "Couldn't evaluate provide expression";
+          }
         }}
         initFocus={true}
         onkeydown={(key) => key === "Enter" && closeModal()}
         label="Weight (g)"
-        type="number"
+        type="text"
       />
     {/snippet}
   </Modal>
