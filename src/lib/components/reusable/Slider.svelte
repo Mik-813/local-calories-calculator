@@ -1,9 +1,16 @@
 <script lang="ts">
   import convert, { type Unit } from "convert-units";
-  import { createDebouncer } from "$lib/utlis/timers";
+  import { createDebouncer, throttle } from "$lib/utlis/timers";
   import { fade } from "svelte/transition";
   import Modal from "$lib/components/reusable/Modal.svelte";
   import CustomInput from "$lib/components/reusable/CustomInput.svelte";
+
+  const throttledOnSliderInput = throttle(
+    (e: Event & { currentTarget: EventTarget & HTMLInputElement }) => {
+      onThumbMove();
+      onCurrentValueChange(Number(e.currentTarget.value));
+    }, 10
+  );
 
   let {
     currentValue = 0,
@@ -70,10 +77,7 @@
       min="0"
       max={maxValue}
       value={currentValue}
-      oninput={(e) => {
-        onThumbMove();
-        onCurrentValueChange(Number(e.currentTarget.value));
-      }}
+      oninput={throttledOnSliderInput}
       class="w-full h-2 bg-purple-100 rounded-full appearance-none cursor-pointer slider"
       style="background: linear-gradient(to right, #8b5cf6 0%, #8b5cf6 
       {(currentValue / maxValue) * 100}%, #e9d5ff

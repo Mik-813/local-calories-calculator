@@ -22,7 +22,7 @@ export function createDebouncer(callback: () => void, milliseconds = 1000) {
     };
 }
 
-export function debounce(fn: () => void, milliseconds: number): () => void {
+export function debounce(fn: () => void, milliseconds: number = 1000): () => void {
     let timer: ReturnType<typeof setTimeout>;
     return () => {
         clearTimeout(timer);
@@ -30,11 +30,14 @@ export function debounce(fn: () => void, milliseconds: number): () => void {
     };
 }
 
-export function throttle(fn: () => void, milliseconds: number): () => void {
+export function throttle<Args extends unknown[]>(
+    fn: (...args: Args) => void,
+    milliseconds: number = 1000
+) {
     let inThrottle = false;
-    return () => {
+    return (...args: Args) => {
         if (!inThrottle) {
-            fn();
+            fn(...args);
             inThrottle = true;
             setTimeout(() => inThrottle = false, milliseconds);
         }

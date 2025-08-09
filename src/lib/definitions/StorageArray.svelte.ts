@@ -44,11 +44,11 @@ export class StorageItem<T extends object> extends StorageEntity<T> {
         const _data = localStorage.getItem(key)
         this.data = $state(_data ? JSON.parse(_data) : defaultValue);
     }
-
 }
 
 export class StorageArray<T> extends StorageEntity<T[]> {
     protected data: T[];
+    
     constructor(key: string, defaultValue: T[] = [], storage: Storage = localStorage) {
         super(key, storage);
         const _data = localStorage.getItem(key)
@@ -66,6 +66,7 @@ export class StorageArray<T> extends StorageEntity<T[]> {
 
 export class StorageMap<T> extends StorageEntity<Map<string, T>> {
     protected data: Map<string, T>;
+
     constructor(key: string, defaultValue: Map<string, T> = new SvelteMap(), storage: Storage = localStorage) {
         super(key, storage);
         const _data = localStorage.getItem(key)
