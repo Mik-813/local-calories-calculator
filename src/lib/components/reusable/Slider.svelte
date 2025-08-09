@@ -1,6 +1,6 @@
 <script lang="ts">
   import convert, { type Unit } from "convert-units";
-  import { createDebouncer, throttle } from "$lib/utlis/timers";
+  import { debounce, throttle } from "$lib/utlis/timers";
   import { fade } from "svelte/transition";
   import Modal from "$lib/components/reusable/Modal.svelte";
   import CustomInput from "$lib/components/reusable/CustomInput.svelte";
@@ -31,7 +31,7 @@
   let expression = $state(`${maxValue ?? ""}`);
   let evaluationError = $state("");
 
-  const debounceShowTooltip = createDebouncer(() => (showTooltip = false), 200);
+  const debounceShowTooltip = debounce(() => (showTooltip = false), 200);
 
   function onThumbMove() {
     if (document.activeElement instanceof HTMLInputElement) {
