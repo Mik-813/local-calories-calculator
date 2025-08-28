@@ -17,7 +17,6 @@
   } = $props();
 
   let isWrapped = $state(true);
-  let isVisibleDropdown = $state(false);
   let containerRef: HTMLDivElement;
 
   onMount(() => {
@@ -89,7 +88,6 @@
         bind:value={title}
         bind:error={titleError}
         oninput={setTitle}
-        onfocus={() => (isVisibleDropdown = true)}
         label="Title"
       />
 

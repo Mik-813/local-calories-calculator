@@ -1,6 +1,7 @@
 <script lang="ts">
   import { storage } from "$lib/states/storage.svelte";
   import CustomInput from "$lib/components/reusable/CustomInput.svelte";
+  import { actions } from "$lib/definitions/actions";
 
   let settings = $state(storage.settings.get());
 
@@ -15,5 +16,5 @@
     <CustomInput bind:value={settings.currency_sign} label="" placeholder="(unmanaged currency)" />
   </div>
 
-  <button class="bg-red-500 text-white p-4 rounded font-bold">Clear data</button>
+  <button class="bg-red-500 text-white p-4 rounded font-bold" onclick={actions.clearAll}>Clear data</button>
 </div>

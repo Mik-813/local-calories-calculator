@@ -48,7 +48,7 @@ export class StorageItem<T extends object> extends StorageEntity<T> {
 
 export class StorageArray<T> extends StorageEntity<T[]> {
     protected data: T[];
-    
+
     constructor(key: string, defaultValue: T[] = [], storage: Storage = localStorage) {
         super(key, storage);
         const _data = localStorage.getItem(key)
@@ -61,6 +61,10 @@ export class StorageArray<T> extends StorageEntity<T[]> {
 
     remove(value: T) {
         this.set(this.get().filter(item => item !== value));
+    }
+
+    clear() {
+        this.set([]);
     }
 }
 
@@ -105,5 +109,23 @@ export class StorageMap<T> extends StorageEntity<Map<string, T>> {
 
     size() {
         return this.data.size
+    }
+    getCSV() {
+        throw new Error("Method not finished.");
+        return Object.values(this.data.values).join(",");
+    }
+
+    setCSVLines(lines: string[]) {
+        throw new Error("Method not finished.");
+        const head = lines[0].split(",")
+        const objects = lines.map((line) => {
+            const obj = {};
+            const values = line.split(",");
+            for (let i = 0; i < head.length; i++) {
+                obj[head[i]] = values[i];
+            }
+            return obj as T;
+        });
+        this.set(new SvelteMap(objects.map((obj: T) => [obj.title, obj])));
     }
 }

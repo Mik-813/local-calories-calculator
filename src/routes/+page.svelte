@@ -9,44 +9,7 @@
   import Searchbar from "$lib/components/reusable/Searchbar.svelte";
   import Stats from "$lib/components/Stats.svelte";
   import MagnifierIcon from "$lib/icons/MagnifierIcon.svelte";
-
-  function scrollIntoTitle(title: string) {
-    const element = document.querySelector(
-      `[data-hot-product-title="${title}"]`,
-    ) as HTMLElement;
-    if (!element) return;
-
-    element.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    });
-
-    element.classList.add("ring-3", "ring-purple-500");
-    setTimeout(
-      () => element.classList.remove("ring-3", "ring-purple-500"),
-      1000,
-    );
-  }
-
-  function createHotProduct(title: string) {
-    storage.hotProducts.assign(title, { title, consumption_g: 0, weight: 100 });
-  }
-
-  function addHotProduct(hp: ListItem<Product>) {
-    if (!hp.data?.title) return;
-    storage.hotProducts.assign(hp.data?.title, { ...hp.data });
-  }
-
-  function removeHotProduct(hotProduct: Product) {
-    storage.hotProducts.remove(hotProduct.title);
-  }
-
-  function newList() {  
-    storage.hotProducts
-      .get()
-      .forEach((value, key) => key && storage.persistentProducts.assign(key, value));
-    storage.hotProducts.clear();
-  }
+  import { actions } from "$lib/definitions/actions";
 
   const searchProducts = $derived(
     Array.from(storage.persistentProducts.get())
@@ -55,7 +18,7 @@
         return {
           title: key,
           data: value,
-          onClick: addHotProduct,
+          onClick: actions.hotProduct.add,
         } as ListItem<Product>;
       }),
   );
@@ -82,7 +45,7 @@
       placeholder="Add products"
       items={searchProducts}
       onremove={(item) => storage.persistentProducts.remove(item.title)}
-      onclick={addHotProduct}
+      onclick={actions.hotProduct.add}
     >
       {#snippet empty(closeDropdown, title)}
         {#if !storage.hotProducts.has(title)}
@@ -90,7 +53,7 @@
             class="flex gap-1.5 items-center px-2 hover:bg-purple-50/50 text-sm cursor-pointer w-full"
             onclick={() => {
               closeDropdown();
-              createHotProduct(title);
+              actions.hotProduct.create(title);
             }}
           >
             <div
@@ -105,7 +68,7 @@
             class="flex gap-0.5 items-center px-2 hover:bg-purple-50/50 text-sm cursor-pointer w-full text-purple-600"
             onclick={() => {
               closeDropdown();
-              scrollIntoTitle(title);
+              actions.hotProduct.scrollInto(title);
             }}
           >
             <div class="p-1.5">
@@ -122,11 +85,11 @@
   <main use:autoAnimate class="px-4 py-8 max-w-4xl mx-auto">
     <button
       class="flex gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white p-4 rounded-lg font-bold items-center w-full opacity-85"
-      onclick={newList}><ArrowPath /> New list</button
+      onclick={actions.newList}><ArrowPath /> New list</button
     >
     <div class="p-2"></div>
     {#each storage.hotProducts.get() as [_, hotProduct]}
-      <HotProductComponent {hotProduct} onRemove={removeHotProduct} />
+      <HotProductComponent {hotProduct} onRemove={actions.hotProduct.remove} />
     {/each}
     {#if !storage.hotProducts.size()}
       <NoData />
