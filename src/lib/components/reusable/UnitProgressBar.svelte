@@ -3,7 +3,7 @@
   import millify from "millify";
   import { useWeighter } from "$lib/utlis/use";
 
-  const { reduction, title }: Stat = $props();
+  const { formula: reduction, title }: Stat = $props();
 
   const [currentValue, maxValue] = $derived(useWeighter(reduction));
   const progressPercentage = $derived((currentValue / maxValue) * 100);

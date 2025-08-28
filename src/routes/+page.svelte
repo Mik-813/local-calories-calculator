@@ -37,7 +37,7 @@
       stats={[
         {
           title: "Calories (kcal)",
-          reduction: (p) => (p.kcal_100g ?? 0) / 100,
+          formula: (p) => (p.kcal_100g ?? 0) / 100,
         },
       ]}
     />

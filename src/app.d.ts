@@ -34,7 +34,7 @@ declare global {
 
 	interface Stat {
 		title: string;
-		reduction: (product: Product) => number;
+		formula: (product: Product) => number;
 	}
 }
 
