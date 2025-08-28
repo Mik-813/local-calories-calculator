@@ -35,8 +35,11 @@
 	},
 	"dependencies": {
 		"@formkit/auto-animate": "^0.8.2",
+		"@types/papaparse": "^5.3.16",
 		"convert-units": "^2.3.4",
+		"export-to-csv": "^1.4.0",
 		"fuse.js": "^7.1.0",
-		"millify": "^6.1.0"
+		"millify": "^6.1.0",
+		"papaparse": "^5.5.3"
 	}
 }

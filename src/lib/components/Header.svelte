@@ -6,23 +6,21 @@
   import SettingsIcon from "$lib/icons/SettingsIcon.svelte";
   import Modal from "$lib/components/reusable/Modal.svelte";
   import Settings from "$lib/components/Settings.svelte";
+  import { mkConfig, generateCsv, download } from "export-to-csv";
+  import Papa from "papaparse";
 
   let isSidebarOpen = $state(false);
   let isSettingsOpen = $state(false);
 
   function exportToCSV() {
-    const csv = storage.persistentProducts
-      .get()
-      .map((p) => Object.values(p).join(","))
-      .join("\n");
-    const blob = new Blob([csv], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "products.csv";
-    a.click();
-    URL.revokeObjectURL(url);
+    const csvConfig = mkConfig({
+      useKeysAsHeaders: true,
+      filename: "products",
+    });
+    const csv = generateCsv(csvConfig)(
+      storage.persistentProducts.get().values().toArray(),
+    );
+    download(csvConfig)(csv);
   }
 
   function importFromCSV() {
@@ -31,26 +29,16 @@
     input.accept = ".csv";
     input.style.display = "none";
     input.addEventListener("change", (e: any) => {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (typeof reader.result !== "string") return;
-
-        const lines = (reader.result as string).split("\n").filter(Boolean);
-        const products = lines.map((line) => {
-          const [consumption_g, kcal_100g, price, title, weight] =
-            line.split(",");
-          return {
-            consumption_g: Number(consumption_g),
-            kcal_100g: Number(kcal_100g),
-            price: Number(price),
-            title,
-            weight: Number(weight),
-          } as Product;
-        });
-        storage.persistentProducts.set(products);
-      };
-      reader.readAsText(file);
+      Papa.parse(e.target.files[0], {
+        header: true,
+        skipEmptyLines: true,
+        complete: (results) => {
+          const products = results.data as Product[];
+          storage.persistentProducts.set(
+            new Map(products.map((obj) => [obj.title, obj])),
+          );
+        },
+      });
     });
     input.click();
     input.remove();
