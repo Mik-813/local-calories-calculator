@@ -43,7 +43,7 @@ export const actions = {
     storage.hotProducts
       .get()
       .forEach(
-        (value, key) => key && storage.persistentProducts.assign(key, value),
+        (value, key) => key && storage.persistentProducts.assign(key, { ...value, consumption_g: 0 }),
       );
     storage.hotProducts.clear();
   },

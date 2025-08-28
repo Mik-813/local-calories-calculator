@@ -83,15 +83,20 @@
   </div>
 
   <main use:autoAnimate class="px-4 py-8 max-w-4xl mx-auto">
-    <button
-      class="flex gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white p-4 rounded-lg font-bold items-center w-full opacity-85"
-      onclick={actions.newList}><ArrowPath /> New list</button
-    >
-    <div class="p-2"></div>
-    {#each storage.hotProducts.get() as [_, hotProduct]}
-      <HotProductComponent {hotProduct} onRemove={actions.hotProduct.remove} />
-    {/each}
-    {#if !storage.hotProducts.size()}
+    {#if storage.hotProducts.size() > 0}
+      <button
+        class="flex gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white p-4 rounded-lg font-bold items-center w-full opacity-85"
+        onclick={actions.newList}
+        ><ArrowPath /> New list
+      </button>
+      <div class="p-2"></div>
+      {#each storage.hotProducts.get() as [_, hotProduct]}
+        <HotProductComponent
+          {hotProduct}
+          onRemove={actions.hotProduct.remove}
+        />
+      {/each}
+    {:else}
       <NoData />
     {/if}
   </main>
