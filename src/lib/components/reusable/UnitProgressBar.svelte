@@ -10,21 +10,21 @@
   const left = $derived(maxValue - currentValue);
 </script>
 
-{#if left}
-  <div class="flex flex-col gap-2">
-    <div class="font-semibold">
-      {title}
-    </div>
-
-    <div class="flex justify-between text-sm">
-      <span>{millify(currentValue)}</span>
-      <span transition:fade={{ duration: 100 }}>{millify(left)} left</span>
-    </div>
-    <div class="w-full bg-white/20 rounded-full h-2 overflow-hidden">
-      <div
-        class="h-full bg-purple-300 rounded-full transition-all duration-500 ease-out"
-        style="width: {Math.min(progressPercentage, 100)}%"
-      ></div>
-    </div>
+<div class="flex flex-col gap-2">
+  <div class="font-semibold">
+    {title}
   </div>
-{/if}
+
+  <div class="flex justify-between text-sm">
+    <span>{millify(currentValue)}</span>
+    {#if left}
+      <span transition:fade={{ duration: 100 }}>{millify(left)} left</span>
+    {/if}
+  </div>
+  <div class="w-full bg-white/20 rounded-full h-2 overflow-hidden">
+    <div
+      class="h-full bg-purple-300 rounded-full transition-all duration-500 ease-out"
+      style="width: {Math.min(progressPercentage, 100)}%"
+    ></div>
+  </div>
+</div>
