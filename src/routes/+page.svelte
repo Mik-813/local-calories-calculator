@@ -17,6 +17,7 @@
       .map(([key, value]) => {
         return {
           title: key,
+          subtitle: `${value.weight}g`,
           data: value,
           onClick: actions.hotProduct.add,
         } as ListItem<Product>;

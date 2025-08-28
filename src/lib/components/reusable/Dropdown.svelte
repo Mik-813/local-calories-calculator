@@ -29,7 +29,12 @@
               onClick?.(item);
             }}
           >
-            {item.title}
+            <div class="flex gap-2">
+              {item.title}
+              {#if item.title}
+                <span class="text-gray-400">{item.subtitle}</span>
+              {/if}
+            </div>
           </button>
           <button
             class="p-2 items-center group"

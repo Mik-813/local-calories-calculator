@@ -27,6 +27,7 @@ declare global {
 
 	interface ListItem<T> {
 		title: string
+		subtitle?: string
 		data?: T
 		onClick?: (option: ListItem<T>) => void
 		onRemove?: (option: ListItem<T>) => void
