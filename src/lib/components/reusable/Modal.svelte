@@ -22,7 +22,7 @@
   <div
     transition:fade={{ duration: 150 }}
     class="flex flex-col justify-around items-center p-2 bg-black/50 z-50
-    fixed inset-0"
+    fixed inset-0 z-50"
   >
     <div class="sm:hidden"></div>
     <form

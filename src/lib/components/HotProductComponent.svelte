@@ -5,6 +5,7 @@
   import CustomInput from "$lib/components/reusable/CustomInput.svelte";
   import autoAnimate from "@formkit/auto-animate";
   import { storage } from "$lib/states/storage.svelte";
+  import { actions } from "$lib/definitions/actions";
 
   const hotProducts = $derived(storage.hotProducts.get());
 
@@ -19,6 +20,7 @@
   let isWrapped = $state(true);
   let isNutriListOpen = $state(false);
   let containerRef: HTMLDivElement;
+  let kcal_100g = $state(hotProduct.kcal_100g?.toString() ?? "");
 
   onMount(() => {
     if (containerRef) {
@@ -53,14 +55,10 @@
     });
     titleError = "";
   }
-
-  function setHotProduct(hp: Product) {
-    storage.hotProducts.assign(hotProduct.title, hp);
-  }
 </script>
 
 <div
-  class="relative bg-gradient-to-r from-purple-600 to-indigo-600 opacity-85 rounded-xl ring-0 transition-all mb-4"
+  class="relative bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl ring-0 transition-all mb-4"
   data-hot-product-title={hotProduct.title}
 >
   <div
@@ -97,21 +95,21 @@
         />
 
         <CustomInput
-          value={hotProduct.kcal_100g}
-          oninput={(kcal_100g) => {
-            setHotProduct({
+          value={kcal_100g}
+          oninput={(_kcal_100g) => {
+            kcal_100g = _kcal_100g;
+            actions.hotProduct.set({
               ...hotProduct,
-              kcal_100g: Number(kcal_100g),
+              kcal_100g: Number(_kcal_100g),
             });
           }}
           label="Calories (kcal/100g)"
-          type="number"
         />
 
         <!-- <CustomInput
           value={hotProduct.price}
           oninput={(price) => {
-            setHotProduct({
+            actions.hotProduct.set({
               ...hotProduct,
               price: Number(price),
             });
@@ -127,12 +125,12 @@
 
       <Slider
         onCurrentValueChange={(consumption_g) =>
-          setHotProduct({
+          actions.hotProduct.set({
             ...hotProduct,
             consumption_g: Number(consumption_g),
           })}
         onMaxValueChange={(weight) => {
-          setHotProduct({
+          actions.hotProduct.set({
             ...hotProduct,
             weight: Number(weight),
           });
@@ -144,9 +142,14 @@
   </div>
   <div class="flex flex-col items-center gap-1" use:autoAnimate>
     {#if isNutriListOpen}
-      <div class="flex flex-col items-center gap-1 p-4 pt-8 text-white bg-white/5 w-full">
+      <div
+        class="flex flex-col items-center gap-1 p-4 pt-8 text-white bg-white/5 w-full"
+      >
         <span class="font-semibold">Calories (kcal)</span>
-        {((hotProduct.kcal_100g ?? 0) * (hotProduct.consumption_g ?? 0)) / 100}
+        <span class="text-sm">
+          {((hotProduct.kcal_100g ?? 0) * (hotProduct.consumption_g ?? 0)) /
+            100}
+        </span>
       </div>
     {/if}
     <div class="flex justify-center w-full">

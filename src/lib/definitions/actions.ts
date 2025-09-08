@@ -37,6 +37,10 @@ export const actions = {
     remove(hotProduct: Product) {
       storage.hotProducts.remove(hotProduct.title);
     },
+
+    set(hotProduct: Product) {
+      storage.hotProducts.assign(hotProduct.title, hotProduct);
+    }
   },
 
   newList() {

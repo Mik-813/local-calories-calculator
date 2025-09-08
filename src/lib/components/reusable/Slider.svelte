@@ -9,7 +9,8 @@
     (e: Event & { currentTarget: EventTarget & HTMLInputElement }) => {
       onThumbMove();
       onCurrentValueChange(Number(e.currentTarget.value));
-    }, 10
+    },
+    10,
   );
 
   let {
@@ -76,12 +77,14 @@
       type="range"
       min="0"
       max={maxValue}
-      value={currentValue}
+      value={Math.min(currentValue, maxValue)}
       oninput={throttledOnSliderInput}
       class="w-full h-2 bg-purple-100 rounded-full appearance-none cursor-pointer slider"
-      style="background: linear-gradient(to right, #8b5cf6 0%, #8b5cf6 
-      {(currentValue / maxValue) * 100}%, #e9d5ff
-      {(currentValue / maxValue) * 100}%, #e9d5ff 100%)"
+      style="background: linear-gradient(to right,
+      #8b5cf6 0%,
+      #8b5cf6 {(currentValue / maxValue) * 100}%,
+      #e9d5ff {(currentValue / maxValue) * 100}%,
+      #e9d5ff 100%)"
     />
   </div>
   <div class="flex justify-between text-sm mt-2">
@@ -90,8 +93,10 @@
       class="text-purple-600"
       onclick={() => {
         isMaxValueModalVisible = true;
-      }}>{prettifiedMaxValue}</button
+      }}
     >
+      {prettifiedMaxValue}
+    </button>
   </div>
 
   <Modal bind:visible={isMaxValueModalVisible}>
@@ -107,7 +112,7 @@
             onMaxValueChange(Number(evaluation));
             evaluationError = "";
           } catch {
-            evaluationError = "Couldn't evaluate provide expression";
+            evaluationError = "Couldn't evaluate. Provide the expression";
           }
         }}
         initFocus={true}
